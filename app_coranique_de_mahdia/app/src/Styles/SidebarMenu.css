@@ -1,0 +1,8 @@
+.nav-pills li a:hover{
+    background-color: #2a5551;
+}
+.bg-blue_gray_400{
+    direction:rtl;
+    margin-left:1100px;
+    background-color: #77af9c;
+}

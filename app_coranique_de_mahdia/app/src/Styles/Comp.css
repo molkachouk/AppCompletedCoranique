@@ -1,0 +1,147 @@
+.comp{
+    padding: 50px ;
+    position: relative;
+    z-index: 22;
+}
+.comp h1{
+  color: #efac41;
+  text-align: center;
+  font-family: "Cairo", sans-serif;
+  font-size: 60px;
+  font-weight: 700;
+  position: relative;
+}
+.comp .card{
+    width: 22rem ;
+    background: #ffffff;
+  /*border-radius: 20px 20px 40px 40px;
+  border-style: solid;
+  border-color: #77af9c;
+  border-width: 5px;*/
+  height: 550px;
+  position: relative;
+  justify-content: center;
+  
+  margin-right: 15px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+
+/* If you want space on the left side of the first card as well */
+.card:nth-child(1) {
+  margin-left: 15px; /* Adjust as needed */
+}
+.card:nth-child(2) {
+  margin-left: 15px; /* Adjust as needed */
+}
+.card:nth-child(3) {
+  margin-left: 15px; /* Adjust as needed */
+}
+.card:nth-child(4) {
+  margin-left: 15px; /* Adjust as needed */
+}
+.comp .card .imgCard{
+  height: 350px;
+  position: relative;
+  border-radius: 10px 10px 300px 300px;
+  border-style: solid;
+  border-color: #1ea599;
+  border-width: 0px 0px 40px 0px;
+  object-fit: cover;
+}
+.comp .date{
+  color: #ffffff;
+  background: #1ea599;
+  border-radius: 20px;
+  width: 150px;
+  height: 40px;
+  display: flex;
+  position: relative;
+  font-family: "Cairo", sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  justify-content: center;
+  
+  
+}
+.comp .card-title{
+  color: #000000;
+  text-align: right;
+  font-family: "Cairo", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  
+}
+.comp .ellipse-15{
+  background: #d9d9d9;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  position: relative;
+  object-fit: cover;
+
+}
+.comp .text{
+  position: relative;
+  height: 74px;
+  display: flex;
+  align-items:center;
+}
+.comp .title{
+  color: #000000;
+  font-family: "Cairo", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+}
+.comp .sub-text{
+  color: #6c6c6c;
+  font-family: "Cairo", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+ 
+  
+}
+.swiper {
+  padding: 2rem;
+}
+
+.swiper .res-slide {
+  min-width: 300px;
+  max-width: 400px;
+  min-height: 350px;
+}
+.res-slide:nth-child(1) {
+  background: center 
+}
+
+.res-slide:nth-child(2) {
+  background: center 
+}
+
+.res-slide:nth-child(3) {
+  background: center 
+}
+
+.res-slide:nth-child(4) {
+  background: center 
+}
+
+.res-slide:nth-child(5) {
+  background: center 
+}
+
+.res-slide:nth-child(6) {
+  background: center 
+}
+
+.res-slide:nth-child(7) {
+  background: center 
+}
+
+.res-slide:nth-child(8) {
+  background: center 
+}

@@ -1,0 +1,158 @@
+.event{
+    padding: 50px;
+    background-color: #EEECE9;
+    position: relative;
+}
+.event h5{
+  color: #1ea599;
+  text-align: center;
+  font-family: "Changa", sans-serif;
+  font-size: 30px;
+  font-weight: 500;
+  position: relative;
+  height: 54px;
+}
+.event h1{
+  color: #000000;
+  text-align: center;
+  font-family: "Changa", sans-serif;
+  font-size: 60px;
+  font-weight: 600;
+  position: relative;
+  height: 80px;
+}
+.event .card{
+    width: 22rem ;
+    background: #ffffff;
+  border-radius: 20px 20px 40px 40px;
+  border-style: solid;
+  border-color: #77af9c;
+  border-width: 5px;
+  height: 550px;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+
+}
+.event .card .imgCard{
+    background: #ffffff;
+  border-radius: 20px;
+  width: 20rem;
+  height: 270px;
+  position: relative;
+  margin:10px 0px 0px 0px ;
+
+  
+
+}
+.event .ellipse-16{
+    border-radius: 50%;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.3);
+  border-width: 1px;
+  width: 60px;
+  height: 60px;
+  position: relative;
+  object-fit: cover;
+}
+.event .txt1{
+  margin: 20px 0px 0px 0px ;
+  color: #efac41;
+  font-family: "Cairo", sans-serif;
+  font-size: 20px;
+  line-height: 50px;
+  font-weight: 500;
+  text-align: right;
+  position: relative;
+  display: flex;
+
+}
+.event .txt2{
+  color: #6c6c6c;
+  font-family: "Cairo", sans-serif;
+  font-size: 25px;
+  line-height: 50px;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+.event .card-title{
+  
+  position: relative;
+  height: 74px;
+  display: flex;
+  align-items: center;
+}
+.event .title{
+  margin: 0px 10px 0px 0px;
+  color: #2a5551;
+  text-align: right;
+  font-family: "Cairo", sans-serif;
+  font-size: 19px;
+  line-height: 50px;
+  font-weight: 700;
+}
+.swiper {
+  padding: 2rem;
+}
+
+.swiper .res-slide {
+  min-width: 300px;
+  max-width: 400px;
+  min-height: 350px;
+}
+
+.swiper-nav-btns button {
+  width: 60px;
+  height: 50px;
+  border-radius: 50px;
+  border: none;
+  outline: none;
+  background-color: rgba(42, 85, 81, 86%);
+  color: #fff;
+  margin: 0px 0.5rem;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  margin-top: 30px;
+  transition: all .5s;
+}
+.swiper-nav-btns button .icon1 {
+  font-size: 30px;
+}
+
+.swiper-nav-btns button:hover {
+  background-color: rgba(42, 85, 81, 100%);
+  cursor: pointer;
+}
+
+.res-slide:nth-child(1) {
+  background: center 
+}
+
+.res-slide:nth-child(2) {
+  background: center 
+}
+
+.res-slide:nth-child(3) {
+  background: center 
+}
+
+.res-slide:nth-child(4) {
+  background: center 
+}
+
+.res-slide:nth-child(5) {
+  background: center 
+}
+
+.res-slide:nth-child(6) {
+  background: center 
+}
+
+.res-slide:nth-child(7) {
+  background: center 
+}
+
+.res-slide:nth-child(8) {
+  background: center 
+}

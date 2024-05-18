@@ -1,0 +1,12 @@
+.home {
+    display: flex;
+  }
+  
+  .sidebar {
+    flex: 0 0 auto; /* Sidebar does not grow or shrink */
+  }
+  
+  .content {
+    flex: 1; /* Content takes remaining space */
+  }
+  

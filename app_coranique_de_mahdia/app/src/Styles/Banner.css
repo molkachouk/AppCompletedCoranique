@@ -1,0 +1,211 @@
+.banner{
+    padding: 170px 0px 50px 0px;
+    background-color: #EEECE9;
+    justify-content: space-between;
+    position: relative;
+
+  }
+
+  .path {
+    width: 166px;
+    height: 20px;
+    position: relative;
+    overflow: visible;
+  }
+  .banner h1 {
+    color: #000000;
+    text-align: right;
+    font-family: "Cairo", sans-serif;
+    font-size: 60px;
+    line-height: 120px;
+    font-weight: 800;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .banner p {
+    color: #6c6c6c;
+  text-align: right;
+  font-family: "Cairo", sans-serif;
+  font-size: 30px;
+  line-height: 50px;
+  font-weight: 600;
+  height: 148px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  }
+  .banner .buttons {
+    display: flex; /* Use flexbox */
+  }
+  .banner .btn1 {
+    font-weight: 600;
+    color: #2a5551;
+    border: 4px solid #2a5551;
+    font-size: 30px;
+    margin-top: 25px;
+    border-radius: 50px;
+    position: relative;
+    transition: 0.3s ease-in-out;
+    background-color: #eeece9;
+  border-radius: 50px;
+  padding: 20px 60px ;
+  flex-direction: row;
+  align-items: center;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  }
+  .banner .btn2  {
+    margin-top: 25px;
+
+    margin-right: 10px;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 30px;
+    border-radius: 50px;
+    position: relative;
+    transition: 0.3s ease-in-out;
+    background-color: #2a5551;
+  padding: 20px 60px ;
+  flex-direction: row;
+  align-items: center;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  
+  }
+  .banner  button span {
+    z-index: 1;
+    position: relative;
+  }
+  .banner button:hover{
+    color: #2a5551;
+  }
+  .banner button::before{
+    content: "";
+    background: #fff;
+    border-radius: 40px;
+    width: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    transition: 0.3s ease-in-out;
+  }
+  .banner button:hover::before {
+    width: 100%;
+  }
+  .banner button svg {
+    font-size: 25px;
+    margin-left: 10px;
+    transition: 0.3s ease-in-out;
+    line-height: 1;
+  }
+  .banner button:hover svg {
+    margin-left: 25px;
+  }
+  
+  .banner .img1 {
+   z-index :0;
+   width: 475px;
+   border-radius: 0px 500px 500px 500px;
+   height: 560px;
+   box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
+   object-fit: cover;
+   
+    
+  }
+  @media (max-width:800px) {
+    .banner .img1{
+      width: 400px;
+      height:400px;
+    }
+    .banner .img2{
+      display:none;
+    }
+  }
+
+.banner .frame-8 {
+  
+  left:400px;
+  top: 700px;
+  z-index: 1;
+  width: 201px;
+  height: 71px;
+  position: absolute;
+}
+.banner .div {
+  text-align: center;
+  position: relative;
+  width: 192px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner .div-span2 {
+  color: #27c4a4;
+  font-family: "Changa", sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+}
+.banner .div-span3 {
+  color: #77af9c;
+  font-family: "Changa", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+}
+.banner .div-span4 {
+  color: #ffffff;
+  font-family: "Changa", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+}
+.banner .div2 {
+  text-align: center;
+  position: relative;
+  right: 9px;
+  width: 192px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.banner .div-2-span {
+  color: #27c4a4;
+  font-family: "Changa", sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+}
+.banner .div-2-span2 {
+  color: #77af9c;
+  font-family: "Changa", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+}
+.banner .div-2-span3 {
+  color: #ffffff;
+  font-family: "Changa", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+}
+.banner .line-3 {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.5);
+  border-width: 1px 0 0 0;
+  width: 48px;
+  height: 0px;
+  position: absolute;
+  left: 168px;
+  top: 18px;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+}
+.banner .img2 {
+  left: 250px;
+  top:200px;
+  z-index: 1;
+  width: 235px;
+  height: 234px;
+  position: absolute;
+  mix-blend-mode:darken;
+  object-fit: cover;
+}

@@ -1,0 +1,58 @@
+.footer {
+    padding: 50px ;
+    position: relative;
+    z-index: 22;
+    background-color: #2a5551;
+}
+.footer .img-logo{
+    width: 350px;
+    height: 102.21px;
+    position: relative;
+}
+.footer .p-col-1{
+  color: #d6fff0;
+  font-family: "Changa", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  position: relative;
+  margin: 15px 0px 0px 0px;
+ 
+}
+.footer .col-1-icon {
+    width: 35px;
+  height: 27px;
+  position: relative;
+  margin: 15px 0px 0px 0px;
+  color: #d6fff0;
+
+
+}
+.footer .h4{
+    color: #ffffff;
+  text-align: right;
+  font-family: "Changa", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  position: relative;
+  
+  
+}
+.footer a{
+    color: #d6fff0;
+  text-align: right;
+  font-family: "Changa", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  position: relative;
+  
+  
+}
+.footer .p-col-3{
+    color: #d6fff0;
+    text-align: right;
+    font-family: "Changa", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    position: relative;
+    
+}

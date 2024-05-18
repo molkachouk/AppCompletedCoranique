@@ -1,0 +1,123 @@
+.mission{
+    padding: 50px ;
+    position: relative;
+    background: #fff;
+    z-index: 2;
+}
+.mission h1{
+  font-family: 'Cairo',sans-serif !important;
+  font-style: normal;
+  font-weight: 700; 
+  font-size: 60px;
+  line-height: 80px;
+  color: #efac41;
+  text-align: center;
+  
+}
+.mission p{
+  font-family:'Changa', sans-serif;
+  color: #000000;
+  font-weight: 300;
+  font-size: 20px;
+  margin: 1px auto 30px auto;
+  text-align: center;
+  width: 60%;
+
+  
+}
+.mission .mission1 {
+  color: #1c1c1c;
+  text-align: center;
+  font-family: "Cairo", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  position: relative;
+  height: 139px;
+   
+}
+.mission .mission2{
+  color: #1c1c1c;
+  text-align: center;
+  font-family: "Cairo", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  position: relative;
+  height: 139px;
+}
+.mission h5 {
+  color: #2a5551;
+  text-align: center;
+  font-family: "Cairo", sans-serif;
+  font-size: 35px;
+  font-weight: 700;
+  position: relative;
+  
+}
+.mission .mission11{
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  
+
+}
+.mission .deco1{
+  z-index: -1;
+  position:absolute;
+  margin: auto;
+  left: -334px;
+  top: 20px;
+
+
+
+}
+.mission .deco1 img{
+  width:800px;
+  opacity:0.2;
+
+
+}
+.mission .image-fluid{
+  max-width: 100%;
+  height: 700px;
+}
+@media (max-width: 970px){
+.mission .deco1 {
+    display: none;
+  
+}
+.mission .mission11{
+  width: 100px;
+  height: 100px;
+}
+.mission .mission1 {
+  
+  font-size: 12px;
+  height: 139px;
+}
+.mission .mission2 {
+  
+  font-size: 12px;
+  height: 139px;
+}
+.mission h5 {
+  padding-top: 10px;
+  font-size: 25px;
+  
+  
+}
+.mission h1{
+  
+  font-size: 40px;
+  line-height: 80px;
+  
+  
+}
+.mission p{
+  
+  font-size: 16px;
+  width: 90%;
+
+  
+}
+
+}
