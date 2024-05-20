@@ -9,58 +9,82 @@ const Parent = require('../Models/Parent');
       expiresIn: maxAge
     })
   };
+
+  function calculateAge(dateOfBirth) {
+    const today = new Date();
+    const dob = new Date(dateOfBirth);
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    return age;
+}
+
   const studentRegister = async (req, res) => {
     console.log('Secretary Register Request:', req.body);
     console.log('Secretary Register File:', req.file);
-    let image_filename = `${req.file.filename}`;
+    let image_filename = req.file ? `${req.file.filename}` : null;
+
     try {
+        // Check for existing student by email
+        const existingStudent = await Student.findOne({ email: req.body.email });
+        if (existingStudent) {
+            return res.status(400).send({ message: 'Student already exists' });
+        }
+
+        // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPass = await bcrypt.hash(req.body.password, salt);
 
-        const existingStudent = await Student.findOne({
-            email: req.body.email,
-        });
+        // Prepare the student data
+        const studentData = {
+            ...req.body,
+            stud_image: image_filename,
+            password: hashedPass
+        };
 
-        if (existingStudent) {
-            res.send({ message: 'Student already exists' });
-        } else {
-           
-           let parent;
-           if (req.body.father_CIN) {
-               parent = await Parent.findOne({ CIN: req.body.father_CIN });
-               if (!parent) {
-                   return res.status(404).json({ message: 'Parent not found' });
-               }
-           }
+        // Calculate the student's age
+        const age = calculateAge(req.body.date_birth);
 
-            const student = new Student({
-                ...req.body,
-              //  father_CIN: parent._id, 
-                name_group: req.body.name_group,
-                stud_image: image_filename,
-                password: hashedPass
-            });
-            if (req.body.father_CIN) {
-                student.father_CIN = parent._id;
+        // If the student is under 18, check for father_CIN and parent existence
+        if (age < 18) {
+            if (!req.body.father_CIN) {
+                return res.status(400).json({ message: 'Father CIN is required for students under 18' });
             }
-
-            let result = await student.save();
-            result.password = undefined;
-
-            const token = createToken(result._id);
-
-            return res.status(201).json({
-                status: true,
-                message: 'Student registered successfully.',
-                data: {
-                    student: result,
-                    parent: parent,
-                    token: token
-                }
-            });
+            const parent = await Parent.findOne({ CIN: req.body.father_CIN });
+            if (!parent) {
+                return res.status(404).json({ message: 'Parent not found' });
+            }
+            studentData.father_CIN = parent._id;
+        } else {
+            // If the student is 18 or older, check for CIN_student
+            if (!req.body.CIN_student) {
+                return res.status(400).json({ message: 'CIN_student is required for students 18 and older' });
+            }
+            studentData.CIN_student = req.body.CIN_student;
         }
+
+        // Create the student record
+        const student = new Student(studentData);
+        let result = await student.save();
+        result.password = undefined;
+
+        // Create a token for the student
+        const token = createToken(result._id);
+
+        // Respond with the created student data
+        return res.status(201).json({
+            status: true,
+            message: 'Student registered successfully.',
+            data: {
+                student: result,
+                token: token
+            }
+        });
     } catch (err) {
-        res.status(500).json(err);
+        console.error('Error registering student:', err);
+        res.status(500).json({ message: 'Server error', error: err });
     }
 };
 const studentLogIn = async (req, res) => {
@@ -187,12 +211,24 @@ const updateStudent = async (req, res) => {
            if (req.body.units) updateFields.units = req.body.units;
            if (req.body.stud_image) updateFields.stud_image = req.body.stud_image;
            if (req.body.gender) updateFields.gender = req.body.gender;
-           if (parent) {
+           /*if (parent) {
             updateFields.father_CIN = parent._id;
         } else {
             updateFields.father_CIN = null; // Set father's CIN to null if not provided
-        }   
-            if (image_filename) {updateFields.stud_image = image_filename;}
+        }  
+        if (req.body.CIN_student) {
+            updateFields.CIN_student = req.body.CIN_student;
+            updateFields.father_CIN = null; // Set father's CIN to null if CIN_student is provided
+        } */
+        if (req.body.CIN_student) {
+            updateFields.CIN_student = req.body.CIN_student;
+            updateFields.father_CIN = null; // Set father's CIN to null if CIN_student is provided
+        } else if (req.body.father_CIN) {
+            updateFields.father_CIN = parent ? parent._id : null; // Update father_CIN if provided
+            updateFields.CIN_student = null; // Set CIN_student to null if father_CIN is provided
+
+        }
+        if (image_filename) {updateFields.stud_image = image_filename;}
 
         let result = await Student.findByIdAndUpdate(req.params.id,
             { $set: updateFields},

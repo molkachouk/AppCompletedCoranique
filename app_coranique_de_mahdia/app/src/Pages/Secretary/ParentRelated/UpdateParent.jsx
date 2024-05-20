@@ -26,13 +26,12 @@ function UpdateParent() {
   const [email, setEmail] = useState("");
   const[telephone,setTelephone]  = useState("");
   const[mobile,setMobile]  = useState("");
-  const[Address,setAddress]  = useState("");
+  const[address,setAddress]  = useState("");
   const[CIN,setCIN]  = useState("");
   const [password, setPassword] = useState("");
   const [parent_image, setParentImage] = useState(false); 
   const [previewImage, setPreviewImage] = useState(false);
 
-  const address = "Parent";
   const url = "http://localhost:5000";
 
 
@@ -45,12 +44,18 @@ function UpdateParent() {
  /* parentsList && parentsList.length > 0 && parentsList.map((parent) => {
     return {
       name: parent.name,
+      prename: parent.prename,
+      namefrench: parent.namefrench,
+      prenamefrench: parent.prenamefrench,
       email: parent.email,
+      telephone: parent.telephone,
       mobile: parent.mobile,
-      type_etude: parent.type_etude,
+      Address: parent.Address,
+      CIN: parent.CIN,
+      parent_image: parent.parent_image,
       id: parent._id,
     };9  });
-  const fields = { name, email,mobile,type_etude};*/
+  const fields = { name, prename,namefrench,prenamefrench,email,telephone,mobile,Address,CIN,parent_image};*/
 
   useEffect(() => {
     async function fetchParent() {
@@ -64,7 +69,7 @@ function UpdateParent() {
         setEmail(parentData.email);
         setTelephone(parentData.telephone);
         setMobile(parentData.mobile);
-        setAddress(parentData.Address);
+        setAddress(parentData.address);
         setCIN(parentData.CIN);
         setParentImage(parentData.parent_image );
         console.log(parentData);
@@ -77,7 +82,7 @@ function UpdateParent() {
 
   const handleImageChange = (event) => {
     const selectedFile = event.target.files[0];
-    setStudImage(selectedFile);
+    setParentImage(selectedFile);
     
     // Check if there's a selected file
     if (selectedFile) {
@@ -97,11 +102,43 @@ function UpdateParent() {
     }
   };
 
-  const submitHandler = (event) => {
+  /*const submitHandler = (event) => {
     event.preventDefault()
   
     dispatch(updateUser(fields, id, address));
     navigate('/ShowParents');
+  }*/
+  const submitHandler = async(event) => {
+    event.preventDefault();
+    try {
+
+      // Append form data fields to FormData object
+      setLoader(true);
+      const formData = new FormData();
+
+      formData.append('name', name);
+      formData.append('prename', prename);
+      formData.append('namefrench', namefrench);
+      formData.append('prenamefrench', prenamefrench);
+      formData.append('email', email);
+      formData.append('telephone', telephone);
+      formData.append('mobile', mobile);
+      formData.append('address', address);
+      formData.append('CIN', CIN);
+      formData.append('parent_image', parent_image);
+      console.log('Form Data:', formData); // Debugging console log
+
+      await  dispatch(updateUser(formData, id, "Parent"));
+      
+      navigate(-1);
+  } catch (error) {
+      console.error('update Secretary failed:', error);
+      setLoader(false);
+  }
+    /*
+    const fields = { name, email, image };
+    dispatch(updateUser(fields, id, "Secretary"));
+    navigate(-1);*/
   }
 
    
@@ -109,7 +146,7 @@ function UpdateParent() {
   return (
     <Container fluid className="px-4 mt-4">
    
-
+   <Form onSubmit={submitHandler} encType='multipart/form-data'>
       <Nav className="nav nav-borders">
         <Nav.Link>الملف الشخصي</Nav.Link>
       </Nav>
@@ -136,7 +173,7 @@ function UpdateParent() {
           <Card className="mb-4">
             <Card.Header>تفاصيل الحساب</Card.Header>
             <Card.Body>
-              <Form onSubmit={submitHandler}>
+             
                 <Row className="mb-3">
                   <Col md={6}>
                   <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}>  الإسم </Form.Label>
@@ -190,11 +227,12 @@ function UpdateParent() {
                     </Row>
                 
                 <Button style={{ backgroundColor: '#124a44' }} type="submit">حفظ التغييرات</Button>
-              </Form>
+              
             </Card.Body>
           </Card>
         </Col>
       </Row>
+      </Form>
     </Container>
   );
 }

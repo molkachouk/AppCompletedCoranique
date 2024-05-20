@@ -81,6 +81,20 @@ var studentSchema = new mongoose.Schema({
         }
     },
 
+    CIN_student: {
+        type: String,
+        required: function() {
+            // Check if the student is 18 years old or older
+            const age = calculateAge(this.date_birth);
+            return age >= 18;
+        },
+        unique: true,
+        trim: true,
+        maxlength: 8 // Limiting the maximum length to 8 characters
+
+    },
+
+
 
    
     gender: {

@@ -127,17 +127,40 @@ const deleteParents = async (req, res) => {
     }
 }
 const updateParent = async (req, res) => {
-    try {
+    console.log('Parent update Request:', req.body);
+    console.log('Parent  File:', req.file);
+    let image_filename = req.file ? req.file.filename : undefined;    try {
         if (req.body.password) {
             const salt = await bcrypt.genSalt(10)
             req.body.password = await bcrypt.hash(req.body.password, salt)
         }
+        let updateFields = {};
+        if (req.body.name) updateFields.name = req.body.name;
+        if (req.body.prename) updateFields.prename = req.body.prename;
+        if (req.body.namefrench) updateFields.namefrench = req.body.namefrench;
+        if (req.body.prenamefrench) updateFields.prenamefrench = req.body.prenamefrench;
+        if (req.body.email) updateFields.email = req.body.email;
+        if (req.body.mobile) updateFields.mobile = req.body.mobile;
+        if (req.body.telephone) updateFields.telephone = req.body.telephone;
+        if (req.body.address) updateFields.address = req.body.address;
+        if (req.body.CIN) updateFields.CIN = req.body.CIN;
+        if (req.body.parent_image) updateFields.parent_image = req.body.parent_image;
+         if (image_filename) {updateFields.parent_image = image_filename;}
+
+
+
         let result = await Parent.findByIdAndUpdate(req.params.id,
-            { $set: req.body },
+            { $set:updateFields},
             { new: true })
 
         result.password = undefined;
-        res.send(result)
+        return res.status(201).json({
+            status: true,
+            message: 'Parent updated successfully.',
+            data: {
+                parent: result,
+            }
+        });
     } catch (error) {
         res.status(500).json(error);
     }

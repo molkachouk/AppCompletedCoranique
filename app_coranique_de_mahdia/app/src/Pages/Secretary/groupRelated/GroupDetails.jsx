@@ -21,7 +21,7 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import Popper from '@mui/material/Popper';
 import { ToastContainer, toast } from 'react-toastify';
-
+import { MdArrowForwardIos } from "react-icons/md";
 import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from 'react-router-dom';
 import { MdRemoveRedEye } from "react-icons/md";
@@ -71,6 +71,9 @@ const GroupDetails = () => {
             theme: "dark",
         });
     }
+    const goBack = () => {
+        navigate(-1); // Go back to the previous page
+      };
 
 
     const studentColumns = [
@@ -82,7 +85,9 @@ const GroupDetails = () => {
         { id: 'establishment', label: 'المؤسسة التربوية ', minWidth: 100 },
         { id: 'email', label: 'البريد الالكتروني', minWidth: 100 },
         { id: 'mobile', label: 'الهاتف', minWidth: 100 },
-        { id: 'father_CIN', label: 'اسم الأب ', minWidth: 100 },
+        { id: 'father_CIN', label: 'رقم بطاقة الولي ', minWidth: 100 },
+        { id: 'father_name', label: 'اسم الأب ', minWidth: 100 },
+        { id: 'CIN_student', label: 'رقم بطاقة التعريف', minWidth: 100 }, // Add this line
         { id: 'gender', label: 'الجنس', minWidth: 100 },
         { id: 'memo_level', label: 'مستوى الحفظ', minWidth: 100 },
         { id: 'units', label: 'الوحدات', minWidth: 100 },
@@ -105,6 +110,8 @@ const GroupDetails = () => {
             email: student.email,
             mobile: student.mobile,
             father_CIN: student.father_CIN ? student.father_CIN.CIN : 'N/A',
+            father_name: student.father_CIN ? student.father_CIN.name : 'N/A',
+            CIN_student: student.CIN_student, // Ensure this line is correct
             gender: student.gender,
             memo_level: student.memo_level,
             units: student.units,
@@ -225,8 +232,11 @@ const GroupDetails = () => {
                 <div>Loading...</div>
                 :
                 <>
+
                     {response ?
+                    
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' ,fontFamily: 'Changa, sans-serif', fontSize: '12px', fontWeight: '500'}}>
+
                             <Button
                                 variant="contained"
                                 onClick={() => navigate("/addStudent")}
@@ -249,10 +259,14 @@ const GroupDetails = () => {
                             <SpeedDialTemplate actions={actions} />
                         </Paper>
                     }
+                    <Button variant="secondary" style={{ width: '100px' ,height:'50px', backgroundColor: '#EFAC41',fontFamily:'Cairo',fontSize:'15px',fontWeight:'700',marginBottom:'15px',borderRadius:'20px',borderColor:'#B8BDBB' }}  onClick={goBack}><MdArrowForwardIos />رجوع</Button>
+
                 </>
             }
             {/* <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} /> */}
+
         </div>
+        
     );
 };
 

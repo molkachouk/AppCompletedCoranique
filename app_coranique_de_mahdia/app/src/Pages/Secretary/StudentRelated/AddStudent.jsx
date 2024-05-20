@@ -44,6 +44,8 @@ function AddStudent() {
     const [units, setUnits] = useState('');
     const [stud_image, setStudImage] = useState(false); 
     const [father_CIN, setFatherCin] = useState(''); 
+    const [CIN_student, setCINstudent] = useState(''); 
+
     const role = "Student";
 
 
@@ -126,18 +128,22 @@ function AddStudent() {
         formData.append('stud_image', stud_image);
         if (calculateAge(date_birth) < 18) {
             formData.append('father_CIN', father_CIN);
+        }
+        if (calculateAge(date_birth) >= 18) {
+            formData.append('CIN_student', CIN_student);
+            console.log(CIN_student)
         }       
          formData.append('role', role);
-        console.log('Selected image file:', stud_image);
 
         try {
-            console.log('Selected image file:', stud_image);
 
-            const response = await axios.post('/api/StudentRegister', formData);
-            console.log('Selected image file:', stud_image);
+            const response = await axios.post('/api/StudentRegister', formData , {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
             console.log(response.data);
-            console.log('Selected image file:', stud_image);
 
             toast.success('Student registered successfully.');
             setLoader(false);
@@ -347,6 +353,13 @@ function AddStudent() {
                                              </div>
                                         
                                         
+                                    </>
+                                )}
+                                {!showGuardianIDField  && (
+                                    <>
+                                        <Form.Label className="small mb-1"> رقم بطاقة التعريف الخاص بك </Form.Label>
+                                        <Form.Control type="number" placeholder="ادخل رقم بطاقة التعريف" name='CIN_student' value={CIN_student} onChange={(e)=>setCINstudent(e.target.value)}   />
+                
                                     </>
                                 )}
                                 

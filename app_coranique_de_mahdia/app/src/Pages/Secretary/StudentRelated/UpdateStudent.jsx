@@ -42,6 +42,8 @@ function UpdateStudent() {
   const [units, setUnits] = useState('');
   const [stud_image, setStudImage] = useState(''); 
   const [father_CIN, setFatherCin] = useState(''); 
+  const [CIN_student, setCINstudent] = useState(''); 
+
   const [previewImage, setPreviewImage] = useState(false);
   const [groupsList, setGroupsList] = useState([]);
   const [groupLoading, setGroupLoading] = useState(true);
@@ -68,6 +70,11 @@ function UpdateStudent() {
       try {
         const response = await axios.get(`${url}/api/Student/${id}`);
         const studentData = response.data;
+         // Find the group object that matches the student's group
+      const selectedGroup = groupsList.find(group => group._id === studentData.name_group);
+
+      // Set name_group to the entire group object, if found
+        setgroupName(selectedGroup || '');
         setName(studentData.name);
         setPrename(studentData.prename);
         setDateOfBirth(studentData.date_birth);
@@ -77,8 +84,8 @@ function UpdateStudent() {
         setEmail(studentData.email);
         setMobile(studentData.mobile);
         setFatherCin(studentData.father_CIN ? studentData.father_CIN.CIN : '');
+        setCINstudent(studentData.CIN_student);
         setGender(studentData.gender);
-        setgroupName(studentData.name_group);
         setMemoLevel(studentData.memo_level);
         setUnits(studentData.units);
         setStudImage(studentData.stud_image);
@@ -254,7 +261,11 @@ const calculateAge = (birthDate) => {
       formData.append('stud_image', stud_image);
       if (calculateAge(date_birth) < 18) {
           formData.append('father_CIN', father_CIN);
-      }       
+      }  
+      if (calculateAge(date_birth) >= 18) {
+            formData.append('CIN_student', CIN_student);
+            console.log(CIN_student)
+        }       
        
        console.log('Selected image file:', stud_image);
 
@@ -330,9 +341,11 @@ const calculateAge = (birthDate) => {
                                         <Form.Label className="small mb-1"> رقم بطاقة التعريف الولي </Form.Label>
                                         <Form.Control type="number" placeholder="ادخل رقم بطاقة التعريف" name='father_CIN' value={father_CIN} onChange={(e)=>setFatherCin(e.target.value)}      style={{ display: calculateAge(date_birth) < 18 ? 'block' : 'none' }}   />
                                         {calculateAge(date_birth) >= 18 && (
-                                            <div style={{ color: 'red', marginTop: '5px' }}>
-                                              يجب أن يكون الطالب أقل من 18 عامًا لإضافة رقم بطاقة التعريف للوالد.
-                                            </div>
+                                            <>
+                                            <Form.Label className="small mb-1"> رقم بطاقة التعريف الخاص بك </Form.Label>
+                                            <Form.Control type="number" placeholder="ادخل رقم بطاقة التعريف" name='CIN_student' value={CIN_student} onChange={(e)=>setCINstudent(e.target.value)}   />
+                    
+                                        </>
                                           )}
                                            {/*  <div className="add-parent-button" style={{ }}>
                                             <Button style={{ width: '100%' , backgroundColor: !guardianExists ? '#124a44' : 'red' }} className="scrolltoTop" disabled={!guardianExists}  onClick={() => {navigate("/AddParent");handleScrollToTop(); }}>إضافة ولي أمرك</Button>
@@ -425,12 +438,7 @@ const calculateAge = (birthDate) => {
                 <Row className="mb-3">
                   <Col md={6}>
                   <Form.Label className="small mb-1">إضافة الى مجموعة</Form.Label>
-                  <Form.Select name='name_group' value={name_group} onChange={(e) => setgroupName(e.target.value)}>
-                  {name_group ? (
-    <option value={name_group._id}>{name_group.name_group}</option> // Extract name_group property
-  ) : (
-    <option></option>
-  )}
+                  <Form.Select name='name_group' value={name_group ? name_group._id : ''} onChange={(e) => setgroupName(groupsList.find(group => group._id === e.target.value))}>
   {groupLoading ? (
     <option>Loading...</option>
   ) : groupError ? (

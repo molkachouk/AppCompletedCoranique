@@ -108,7 +108,7 @@ router.delete("/Secretarys/:id", secretaryController.deleteSecretarys);
 
  router.put("/Teacher/:id",teacherController.updateTeacher);
  router.put("/Secretary/:id",upload.single("image") ,secretaryController.updateSecretary);
- router.put("/Parent/:id",parentController.updateParent);
+ router.put("/Parent/:id", uploadParent.single("parent_image"),parentController.updateParent);
  router.put("/Group/:id",groupController.updateGroup);
  router.put("/Student/:id", uploadStudent.single("stud_image"),studentController.updateStudent);
  router.put("/Event/:id",uploadEvent.single("images") ,eventController.updateEvent);
