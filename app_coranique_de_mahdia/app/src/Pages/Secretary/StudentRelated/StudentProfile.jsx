@@ -29,6 +29,8 @@ const [loading,setLoading]= useState(true);
 
   const [name, setName] = useState('');
   const [prename, setPrename] = useState('');
+  const [namefrench, setNamefrench] = useState("");
+  const [prenamefrench, setPrenamefrench] = useState("");
   const [date_birth, setDateOfBirth] = useState('');
   const [place_birth, setPlaceOfBirth] = useState('');  
   const [study_level, setStudyLevel] = useState('');
@@ -76,6 +78,8 @@ const [loading,setLoading]= useState(true);
         const studentData = response.data;
         setName(studentData.name);
         setPrename(studentData.prename);
+        setNamefrench(studentData.namefrench);
+        setPrenamefrench(studentData.prenamefrench);
         setDateOfBirth(studentData.date_birth);
         setPlaceOfBirth(studentData.place_birth);
         setStudyLevel(studentData.study_level);
@@ -273,11 +277,15 @@ const goBack = () => {
                <Col md={6}>
                <Form.Label className=" input-text small mb-1"> الإسم </Form.Label>
                                                     <Form.Control type="text" placeholder="ادخل اسمك الكامل" name='name' value={name} onChange={(e)=>setName(e.target.value)} readOnly />
+                                                    <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '19px', marginTop: '25px' }}>  nom </Form.Label>
+                        <Form.Control type="text" placeholder="  enter le nom" value={namefrench} onChange={(e) => setNamefrench(e.target.value)} readOnly/>
                                                     
                </Col>
                <Col md={6}>
                <Form.Label className="input-text small mb-1"> اللقب </Form.Label>
                                                     <Form.Control type="text" placeholder="ادخل اللقب " name='prename' value={prename} onChange={(e)=>setPrename(e.target.value)} readOnly/>
+                                                    <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '19px', marginTop: '25px' }}> prenom </Form.Label>
+                        <Form.Control type="text" placeholder="enter le prenom" value={prenamefrench} onChange={(e) => setPrenamefrench(e.target.value)} readOnly/>
                </Col>
              </Row>  
              <Row className="mb-3">

@@ -8,9 +8,21 @@ var studentSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
+    namefrench:{
+        type:String,
+        required:true,
+        index:true,
+        trim: true
+    },
     prename: {
         type: String,
         required: true,
+        trim: true
+    },
+    prenamefrench:{
+        type:String,
+        required:true,
+        index:true,
         trim: true
     },
     date_birth: {
