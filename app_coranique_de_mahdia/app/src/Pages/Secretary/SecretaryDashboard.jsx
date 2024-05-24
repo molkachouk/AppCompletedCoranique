@@ -38,6 +38,7 @@ import StudentProfile from './StudentRelated/StudentProfile.jsx';
 
 import SecretaryProfileHome from './SecretaryProfileHome.jsx';
 import ShowAllStudent from './StudentRelated/ShowAllStudent.jsx';
+import ExamDashboard from './Examenrelated/ExamDashboard.jsx';
 
 
 function SecretaryDashboard() {
@@ -90,6 +91,7 @@ function SecretaryDashboard() {
             <Box component="main" sx={{ ...styles.boxStyled }}>
                 <Toolbar />
                 <Routes>
+                    <Route path="/ExamDashboard" element={<ExamDashboard/>} />
 
 
                     <Route path="/AddTeacher" element={<AddTeacher />} />

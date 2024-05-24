@@ -5,8 +5,20 @@ var categorieSchema = new mongoose.Schema({
         type:String,
         required:true,
         index:true,
+        unique: true ,
         trim: true
     },
+    description:{
+        type:String,
+        required:true,
+        index:true,
+        trim:true
+    },
+    image_categorie: {
+        type: "String",
+        required: true,
+       
+      },
     
 
     },

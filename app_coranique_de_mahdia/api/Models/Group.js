@@ -7,15 +7,18 @@ var groupSchema = new mongoose.Schema({
         index:true,
         trim: true
     },
-    place: {
+    // place: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //      ref: 'Admin',
+    //     required: true,
+    //  },
+    name_categorie:{
         type: mongoose.Schema.Types.ObjectId,
-         ref: 'Admin',
+        ref:'Categorie',
         required: true,
-     },
-     type_etude:{
-        type: String,
-        enum : ['تجويد','تحفيظ'],
 },
+
+
 
     },
  

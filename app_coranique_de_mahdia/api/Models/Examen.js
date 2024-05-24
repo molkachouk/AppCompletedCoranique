@@ -15,6 +15,11 @@ var examenSchema = new mongoose.Schema({
         trim: true
     
    },
+    /*date: {
+        type: Date,
+        required: [true, 'Provide Date'],
+        index: { expires: '100d' },
+    },*/
    heureDebut:{
     type:String,
         required:true,
@@ -35,20 +40,29 @@ var examenSchema = new mongoose.Schema({
         enum : ['شفاهي','كتابي'],
 
    },
-   matiereExam:{
-    type:String,
-        required:true,
-        index:true,
-        trim: true,
-        enum : ['تجويد','تحفيظ'],
-   },
-   salleExam:{
-    type:String,
-        required:true,
-        index:true,
-        trim: true
-   },
-   groupe: { type: mongoose.Schema.Types.ObjectId, ref: "Group" },
+   matiereExam: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Categorie",
+    required: true,
+    index: true
+},
+   salleExam: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Salle",
+    required: true,
+    index: true
+},
+   groupe: { type: mongoose.Schema.Types.ObjectId,
+    ref: "Group", 
+   required: true,
+   index: true },
+
+   teachers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Teacher", 
+    required: true,
+    index: true
+}]
 
   
 

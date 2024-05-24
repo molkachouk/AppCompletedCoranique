@@ -4,7 +4,8 @@ const Student = require('../Models/Student')
 const groupCreate = async (req, res) =>{
     try{
         const group = new Group({
-            ...req.body,
+            name_group:req.body.name_group,
+            name_categorie:req.params.id,
           
 
         });
@@ -27,9 +28,10 @@ const groupCreate = async (req, res) =>{
     }
     
 };
+
 const groupList = async (req, res) => {
     try {
-        let groups = await Group.find()
+        let groups = await Group.find({name_categorie:req.params.id}).populate("name_categorie");
         if (groups.length > 0) {
             res.send(groups)
         } else {
@@ -39,6 +41,7 @@ const groupList = async (req, res) => {
         res.status(500).json(err);
     }
 };
+
 const getGroupDetail = async (req, res) => {
     try {
         let group = await Group.findById(req.params.id);
@@ -115,6 +118,7 @@ const updateGroup = async (req, res) => {
         res.status(500).json(error);
     }
 }
+
 
 
 

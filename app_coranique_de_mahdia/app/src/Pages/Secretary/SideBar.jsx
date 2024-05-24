@@ -11,7 +11,7 @@ import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import ReportIcon from '@mui/icons-material/Report';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-
+import MenuBookSharpIcon from '@mui/icons-material/MenuBookSharp';
 const SideBar = () => {
     const location = useLocation();
     return (
@@ -54,11 +54,11 @@ const SideBar = () => {
                         </ListItemIcon>
                         <ListItemText primary="الإعلانات" />
                     </ListItemButton>
-                    <ListItemButton component={Link} to="/Admin/complains">
+                    <ListItemButton component={Link} to="/ExamDashboard">
                         <ListItemIcon>
-                            <ReportIcon color={location.pathname.startsWith("/Admin/complains") ? 'primary' : 'inherit'} />
+                            <MenuBookSharpIcon color={location.pathname.startsWith("/ExamDashboard") ? 'primary' : 'inherit'} />
                         </ListItemIcon>
-                        <ListItemText primary="الشكاوى" />
+                        <ListItemText primary="الإمتحانات" />
                     </ListItemButton>
                 </React.Fragment>
                 <Divider sx={{ my: 1 }} />
