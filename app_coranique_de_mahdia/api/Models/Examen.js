@@ -52,7 +52,8 @@ var examenSchema = new mongoose.Schema({
     required: true,
     index: true
 },
-   groupe: { type: mongoose.Schema.Types.ObjectId,
+   groupe: {
+     type: mongoose.Schema.Types.ObjectId,
     ref: "Group", 
    required: true,
    index: true },
@@ -62,7 +63,24 @@ var examenSchema = new mongoose.Schema({
     ref: "Teacher", 
     required: true,
     index: true
-}]
+}],
+period: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    maxlength: 8 // Limiting the maximum length to 8 characters
+
+},
+
+recite:{
+    type:String,
+    required: function() {
+        return this.matiereExam === 'تجويد'; // Only required if matiereExam is 'تجويد'
+    },
+        index:true,
+        trim: true
+   }
 
   
 

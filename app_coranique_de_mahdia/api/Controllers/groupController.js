@@ -72,6 +72,18 @@ const getGroupDetail = async (req, res) => {
         res.status(500).json(err);
      }
  }
+ const getGroupsByCategory = async (req, res) => {
+    try {
+        const groups = await Group.find().populate("name_categorie");
+        if (groups.length > 0) {
+            res.send(groups);
+        } else {
+            res.send({ message: "No groups found for this category" });
+        }
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
 
 const deleteGroup = async (req, res) => {
     try {
@@ -122,4 +134,4 @@ const updateGroup = async (req, res) => {
 
 
 
-module.exports = { groupCreate, groupList, deleteGroup, deleteGroups, getGroupDetail, getGroupStudents,updateGroup  };
+module.exports = { groupCreate, groupList, deleteGroup, deleteGroups, getGroupDetail, getGroupStudents,updateGroup,getGroupsByCategory  };

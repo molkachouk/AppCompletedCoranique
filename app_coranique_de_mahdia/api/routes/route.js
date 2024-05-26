@@ -10,6 +10,8 @@ const eventController = require('../Controllers/eventController');
 const salleController=require('../Controllers/salleController');
 const locationController=require('../Controllers/locationController');
 const examenController=require('../Controllers/examenController');
+const categorieController=require('../Controllers/categorieController');
+
 
 const multer  = require('multer')
 const express = require('express');
@@ -56,7 +58,7 @@ const uploadParent = multer({ storage: parentStorage });
 router.post("/AdminRegister" , adminController.adminRegister);
 router.post("/AdminLogin", adminController.adminLogIn);
 router.post("/StudentRegister", uploadStudent.single("stud_image"),studentController.studentRegister);
-//router.post("/StudentRegister",studentController.studentRegister);
+router.post("/CategorieCreate", upload.single("image"),categorieController.categorieCreate);
 router.post('/StudentLogin', studentController.studentLogIn);
 router.post('/SecretaryRegister', upload.single("image") ,secretaryController.secretaryRegister);
 router.post('/SecretaryLogin', secretaryController.secretaryLogIn);
@@ -82,7 +84,9 @@ router.get("/Teachers",teacherController.getTeachers);
 router.get("/Teacher/:id",teacherController.getTeacherDetail);
 router.get("/Parents",parentController.getParents);
 router.get("/Parent/:id",parentController.getParentDetail);
-router.get("/Groups",groupController.groupList);
+router.get("/Group/:id",groupController.getGroupDetail);
+router.get("/Groups/:id",groupController.groupList);
+
 router.get("/SecretaryByYear/:id",secretaryController.getSecretarysByYear);
 router.get("/getYears/:id",yearController.getYears);
 router.get("/Students/:id",studentController.getStudentsByGroup);
@@ -99,6 +103,11 @@ router.get('/Examen/:id',examenController.getExamenDetail);
 router.get('/Examen/detail',examenController.getExamenDetailByNameAndDate);
 router.get('/Examens',examenController.getExamenall);
 router.get('/Examen/byGroup/:groupName', examenController.getExamenByGroupName);
+router.get('/Categories', categorieController.categorieList);
+router.get('/Categorie/:id', categorieController.getCategorieDetail);
+router.get("/Groups", groupController.getGroupsByCategory);
+
+
 
 
 
@@ -117,6 +126,7 @@ router.delete("/Secretarys/:id", secretaryController.deleteSecretarys);
  router.delete("/Salle/:id",salleController.deleteSalle);
  router.delete("/Location/:id", locationController.deleteLocation);
  router.delete("/Examen/:id", examenController.deleteExamen);
+ router.delete("/Categorie/:id", categorieController.deleteCategorie);
  
 
  router.put("/Teacher/:id",teacherController.updateTeacher);
@@ -128,6 +138,7 @@ router.delete("/Secretarys/:id", secretaryController.deleteSecretarys);
  router.put("/Salle/:id",salleController.updateSalle);
  router.put("/Location/:id", locationController.updateLocation);
  router.put("/Examen/:id", examenController.UpdateExamen);
+ router.put("/Categorie/:id", categorieController.updateCategorie);
 
 
 module.exports=router;

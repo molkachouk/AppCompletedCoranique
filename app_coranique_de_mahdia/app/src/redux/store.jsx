@@ -6,6 +6,9 @@ import { userReducer } from './userRelated/userSlice';
  import { groupReducer } from './groupRelated/groupSlice';
 import { eventReducer } from './eventRelated/eventSlice';
 import { studentReducer } from './studentRelated/studentSlice';
+import { salleReducer } from './salleRelated/salleSlice';
+import { categorieReducer } from './categorieRelated/categorieSlice';
+import { examenReducer } from './examenRelated/examenSlice';
 // import { noticeReducer } from './noticeRelated/noticeSlice';
 // import { sclassReducer } from './sclassRelated/sclassSlice';
 // import { teacherReducer } from './teacherRelated/teacherSlice';
@@ -19,7 +22,12 @@ const store = configureStore({
         parent: parentReducer,
         group: groupReducer,
         event:eventReducer,
-        student:studentReducer
+        student:studentReducer,
+        salle:salleReducer,
+        categorie:categorieReducer,
+        examen:examenReducer,
+        
+
         // teacher: teacherReducer,
         // notice: noticeReducer,
         // complain: complainReducer,

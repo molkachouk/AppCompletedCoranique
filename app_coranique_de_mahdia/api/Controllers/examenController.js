@@ -8,7 +8,7 @@ const AddExamen = async (req, res) => {
     console.log('Examen add Request:', req.body);
 
     try {
-        const { NameExam, DateExam, heureDebut, heureFin, typeExam, matiereExam, salleExamId, teachers, groupe } = req.body;
+        const { NameExam, DateExam, heureDebut, heureFin, typeExam, matiereExam, salleExamId, teachers, groupe ,recite,period} = req.body;
 
         // Find the Categorie by name_categorie
         const categorie = await Categorie.findOne({ name_categorie: matiereExam });
@@ -32,6 +32,11 @@ const AddExamen = async (req, res) => {
         const teacherDocs = await Teacher.find({ _id: { $in: teachers } });
         if (teacherDocs.length !== teachers.length) {
             return res.status(404).send({ error: 'One or more teachers not found' });
+        }
+        
+        let reciteToAdd = null;
+        if (categorie.name_categorie === "تجويد") {
+            reciteToAdd = recite;
         }
 
         // Check if an exam with the same heureDebut already exists
@@ -63,7 +68,10 @@ const AddExamen = async (req, res) => {
             matiereExam: categorie._id,
             salleExam: salle._id,
             teachers: teacherDocs.map(t => t._id),
-            groupe: groupDoc._id
+            groupe: groupDoc._id,
+            period,
+            recite: reciteToAdd
+
         });
 
         await examen.save();
@@ -93,7 +101,10 @@ const AddExamen = async (req, res) => {
                     groupe: {
                         _id: groupDoc._id,
                         name_group: groupDoc.name_group
-                    }
+                    },
+
+                    period:examen.period,
+                    recite: reciteToAdd // Add recite value or null based on condition
                 }
             }
         });
@@ -237,7 +248,7 @@ const deleteExamen=async (req,res)=>{
 
         res.send({
             message: 'Exams deleted successfully',
-            exams: exams
+            examen: examen
         });
     } catch (error) {
         res.status(500).send(error);
@@ -245,12 +256,12 @@ const deleteExamen=async (req,res)=>{
 }
 const getExamenall=async (req,res)=>{
     try {
-        const examens = await Examen.find().populate("matiereExam")
+        const examen = await Examen.find().populate("matiereExam")
                                            .populate("salleExam")
                                            .populate("groupe")
                                            .populate("teachers");
 
-        res.send(examens);
+        res.send(examen);
     } catch (error) {
         res.status(500).send(error);
     }
@@ -299,17 +310,17 @@ const getExamenByGroupName = async (req, res) => {
         }
 
         // Fetch exams for the found group
-        const exams = await Examen.find({ groupe: group._id })
+        const examen = await Examen.find({ groupe: group._id })
                                   .populate("matiereExam")
                                   .populate("salleExam")
                                   .populate("groupe")
                                   .populate("teachers");
 
-        if (!exams || exams.length === 0) {
+        if (!examen || examen.length === 0) {
             return res.status(404).send({ error: 'No exams found for this group' });
         }
 
-        res.send(exams);
+        res.send(examen);
     } catch (error) {
         res.status(500).send(error);
     }

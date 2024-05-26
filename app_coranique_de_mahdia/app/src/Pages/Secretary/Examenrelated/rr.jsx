@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import {
   Box,
@@ -25,17 +25,30 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Alert from '@mui/material/Alert';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getAllGroups } from '../../../redux/groupRelated/groupHandle';
+import { getAllTeachers } from '../../../redux/teacherRelated/teacherHandle';
+import { getAllSalles } from '../../../redux/salleRelated/salleHandle';
+import { getAllCategories } from '../../../redux/categorieRelated/categorieHandle';
+import dayjs from 'dayjs';
 
-
-function DropDownInput({ input_id, title, inputRef, options, isTarget, handleSlot }) {
+function DropDownInput({ input_id, title, inputRef, options, value, onChange, isTarget, handleSlot }) {
   const handleChange = (event) => {
+    const selectedValue = event.target.value;
     if (isTarget) {
-      handleSlot(event);
+      handleSlot(selectedValue);
     }
+    onChange(selectedValue);
   };
 
+
+
   return (
-    <FormControl variant="outlined" margin="dense" sx={{ mb: 2, minWidth: 200, mr: { md: 2, sm: 0 } }}>
+    <FormControl variant="outlined" margin="dense" sx={{ mb: 2, minWidth: 200, mr: { md: 2, sm: 0 }, borderRadius: 50, // Add border radius
+      '& .MuiOutlinedInput-root': {
+        borderRadius: 50, // Add border radius
+      }, }}>
       <InputLabel id={`${input_id}-label`}>{title}</InputLabel>
       <Select
         labelId={`${input_id}-label`}
@@ -43,6 +56,7 @@ function DropDownInput({ input_id, title, inputRef, options, isTarget, handleSlo
         inputRef={inputRef}
         onChange={handleChange}
         label={title}
+        value={value}
       >
         {options.map(item => (
           <MenuItem key={item} value={item}>{item}</MenuItem>
@@ -52,34 +66,97 @@ function DropDownInput({ input_id, title, inputRef, options, isTarget, handleSlo
   );
 }
 
-const options = {
-  category1: ['Option 1.1', 'Option 1.2', 'Option 1.3'],
-  category2: ['Option 2.1', 'Option 2.2', 'Option 2.3']
-};
-
 export default function ExamDashboard() {
-
   const semRef = useRef();
-    const dateRef = useRef();
-    const timeRef = useRef();
-    const branchRef = useRef();
-    const slotRef = useRef();
-    const subRef = useRef();
-    const formRef = useRef();
+  const dateRef = useRef();
+  const timeRef = useRef();
+  const branchRef = useRef();
+  const slotRef = useRef();
+  const subRef = useRef();
+  const formRef = useRef();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { status, currentUser, error } = useSelector(state => state.user);
 
-    const [loading, setLoading] = useState(false);
-    const [sortedExams, setSortedExams] = useState([]);
-    const [toggle, setToggle] = useState(false);
-    const [exams, setExams] = useState([]);
-    const [cleared, setCleared] = React.useState(false);
-    const [category, setCategory] = useState('');
+  const { teachersList, loading: teachersLoading, error: teachersError } = useSelector((state) => state.teacher);
+  const { categoriesList, loading: categoriesLoading, error: categoriesError } = useSelector((state) => state.categorie);
+  const { sallesList } = useSelector((state) => state.salle);
+  const { groupsList, loading: groupsLoading, error: groupsError } = useSelector((state) => state.group);
+  
+  const [NameExam, setNameExam] = useState('');
+  const [DateExam, setDateExam] = useState('');
+  const [heureDebut, setHeureDebut] = useState(dayjs());
+  const [heureFin, setHeureFin] = useState(dayjs());
+  const [typeExam, setTypeExam] = useState('');
+  const [matiereExam, setMatiereExam] = useState('');
+  const [salleExam, setSalleExam] = useState(false);
+  const [groupe, setGroupe] = useState('');
+  const [teachers, setTeachers] = useState('');
+  const [filteredGroups, setFilteredGroups] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [sortedExams, setSortedExams] = useState([]);
+  const [toggle, setToggle] = useState(false);
+  const [exams, setExams] = useState([]);
+  const [cleared, setCleared] = useState(false);
+  const [category, setCategory] = useState('');
+
   const [subcategory, setSubcategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedsubCategory, setSelectedsubCategory] = useState('');
+// Add a state variable to track the current sort option
+const [sortBy, setSortBy] = useState('date'); // Initialize with 'date' as default
+
+// Modify the handleToggle function to toggle between sorting options
+
+
+// Determine the title based on the current sort option
+const title = sortBy === 'date' ? 'Sort By Date' : 'Sort By Branch';
+
+// Determine the checked status of the Switch based on the current sort option
+const checked = sortBy === 'date';
+
+// Determine the sorting logic for the exams based on the current sort option
+
+
+// Use the title and checked status in the Switch component
+<Switch
+  checked={checked}
+  onChange={handleToggle}
+  color="primary"
+  title={title}
+/>
+
+  useEffect(() => {
+    dispatch(getAllSalles());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllTeachers(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    dispatch(getAllGroups(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    dispatch(getAllCategories(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    const fetchGroupsByCategory = () => {
+      if (matiereExam) {
+        const filtered = groupsList.filter(group => group.categorie === matiereExam);
+        setFilteredGroups(filtered);
+      }
+    };
+    fetchGroupsByCategory();
+  }, [matiereExam, groupsList]);
 
   const handleCategoryChange = (event) => {
     const selectedCategory = event.target.value;
     setCategory(selectedCategory);
-    // Update the options for the subcategory dropdown based on the selected category
     setSubcategory('');
   };
 
@@ -87,25 +164,23 @@ export default function ExamDashboard() {
     setSubcategory(event.target.value);
   };
 
-  const handleCategoryTableChange = (event) => {
-    const selectedCategory = event.target.value;
-    setSelectedCategory(selectedCategory);
-    // Update the options for the subcategory dropdown based on the selected category
-    setSubcategory('');
+  const handleCategoryTableChange = (event, categoryId) => {
+    setSelectedCategory(categoryId);
   };
 
+  const handleSubcategoryTableChange = (event) => {
+    setSelectedsubCategory(event.target.value);
+  };
 
- 
-    const subArray = ['Subject 1', 'Subject 2', 'Subject 3']; // Example subjectsvvv
-
-    const handleSlot = () => {
-      // Handle slot change
+  const handleSlot = () => {
+    // Handle slot change
   };
 
   const handleFiles = () => {
-      // Handle file upload
+    // Handle file upload
   };
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (cleared) {
       const timeout = setTimeout(() => {
         setCleared(false);
@@ -116,349 +191,219 @@ export default function ExamDashboard() {
     return () => {};
   }, [cleared]);
 
-
-  const handleSchedule = (event) => {
-      event.preventDefault();
-      // Handle scheduling
+  const handleSchedule = async (event) => {
+    event.preventDefault();
+    // Handle scheduling
   };
 
   const handleToggle = () => {
-      setToggle(!toggle);
+    setToggle(!toggle);
   };
 
   const handleDelete = (id) => {
-      // Handle delete
+    // Handle delete
   };
 
   const handleClearAll = () => {
-      // Handle clear all
+    // Handle clear all
   };
 
   const handleNext = () => {
-      // Handle next
+    // Handle next
   };
+
   return (
     <div>
-    <AppBar position="static" sx={{marginTop:'20px', direction:'ltr',backgroundColor:'white'}}>
-      
-       
+      <AppBar position="static" sx={{ marginTop: '20px', direction: 'ltr', backgroundColor: 'white' }}>
         <Typography
           variant="h5"
           noWrap
           component="div"
-          sx={{ flexGrow: 1, alignSelf: 'flex-end',color:'#2A5551',fontFamily:'Cairo',fontSize:'30px',margin:'10px 0px 10px 0px'}}
+          sx={{ flexGrow: 1, alignSelf: 'flex-end', color: '#2A5551', fontFamily: 'Cairo', fontSize: '30px', margin: '10px 0px 10px 0px' }}
         >
-         <span style={{ fontWeight:'700'}}> لوحة التحكم:</span>الإمتحانات
+          <span style={{ fontWeight: '700' }}> لوحة التحكم:</span>الإمتحانات
         </Typography>
-
-        
-        
-      
-    </AppBar>
-    <div>
-    <Box display="flex" flexDirection="column" flexGrow={1}>
-    <Box display="flex" flexDirection="row"  flexWrap="wrap" p={2}>
-      {/*/////////////////////////////////////////////////////////////semestre box */}
-      <Box display="flex" flexDirection="row" alignItems="center" mt={2}>
-                        <Typography variant="h6" fontWeight="bold" style={{color:'#2A5551',fontFamily:'Cairo',fontSize:'20px'}}>
-                             إختر السداسية
-                        </Typography>
-                        <FormControl variant="outlined" margin="dense" sx={{ ml: 2, minWidth: 200 }}>
-                            <InputLabel>السداسية</InputLabel>
-                            <Select
-                                label="السداسية"
-                                inputRef={semRef}
-                                onChange={handleSlot}
-                            >
-                                {[...Array(8).keys()].map(i => (
-                                    <MenuItem value={i + 1} key={i}>السداسية {i + 1}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                          {/*/////////////////////////////////////////////////////////////upload file csv*/}
-
-                    <Box display="flex" flexDirection="row" alignItems="center" mt={2}>
-                        <Typography variant="h6" fontWeight="bold" style={{color:'#2A5551',fontFamily:'Cairo',fontSize:'20px'}}>
-                            تحميل جدول الإمتحانات
-                        </Typography>
-                        <input
-                            type="file"
-                            id="myFiles"
-                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                            multiple
-                            style={{ marginLeft: '16px' ,color:'#2A5551',fontFamily:'Cairo',fontSize:'15px'}}
-                        />
-                        <Button variant="contained" color="success" sx={{ ml: 2 }} onClick={handleFiles} style={{fontFamily:'Cairo',fontSize:'17px'}} >
-                            تحميل
-                        </Button>
-                    </Box>
-                    </Box>
-                    <Box px={2} pt={3} my={1}>
-                      {/*/////////////////////////////////////////////////////////////Row of add exam*/}
-
-                    <Typography variant="h6" fontWeight="bold" mb={2} style={{color:'#2A5551',fontFamily:'Cairo',fontSize:'20px'}}>
-                         إضافة إمتحان
-                    </Typography>
-                                       {/*/////////////////////////////////////////////////////////////start form*/}
-
-                    <form ref={formRef} onSubmit={handleSchedule}>
-
-              <Box display="flex" flexDirection="row" gap={2}>
-              <Box
-      sx={{
-        '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-              <TextField id="outlined-basic" label="إسم الإمتحان" variant="outlined" />
-              </Box>
-                   {/*/////////////////////////////////////////////////////////////date input*/}
-
-                {/*<TextField
-                  id="date"
-                  label="Date"
-                  type="date"
-                  inputRef={dateRef}
-                  InputLabelProps={{ shrink: true }}
-                              />*/}
-
-                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box
-        sx={{
-          height: '100%',
-          display: 'flex',
-          position: 'relative',
-          marginTop:'10px',
-          
-        }}
-      >
-        <DemoItem >
-          <DatePicker
-          id="date"
-          type="date"
-          inputRef={dateRef}
-          InputLabelProps={{ shrink: true }}
-            sx={{ width: 260 }}
-            slotProps={{
-              field: { clearable: true, onClear: () => setCleared(true) },
-            }}
-          />
-        </DemoItem>
-
-        {cleared && (
-          <Alert
-            sx={{ position: 'absolute', bottom: 0, right: 0 }}
-            severity="success"
-          >
-            Field cleared!
-          </Alert>
-        )}
-      </Box>
-      <Box  sx={{
-          height: '100%',
-          display: 'flex',
-          position: 'relative',
-          
-        }}>
-      <DemoContainer components={['TimePicker']}>
-        <TimePicker label="بداية الوقت  " sx={{  '& .MuiInputLabel-root': { right:30, transformOrigin: 'right' } }}/>
-      </DemoContainer>
-      </Box>
-      <Box  sx={{
-          height: '100%',
-          display: 'flex',
-          position: 'relative',
-          
-        }}>
-      <DemoContainer components={['TimePicker']} >
-        <TimePicker label="نهاية الوقت " sx={{  '& .MuiInputLabel-root': { right:30, transformOrigin: 'right' } }}/>
-      </DemoContainer>
-      </Box>
-    </LocalizationProvider>
-                       {/*/////////////////////////////////////////////////////////////end date input*/}
-      
-
-                <DropDownInput input_id="matier" title="المادة" inputRef={branchRef} options={['تجويد', 'تحفيظ']} isTarget handleSlot={handleSlot} />
-                <DropDownInput input_id="typeExam" title="نوع الإمتحان" inputRef={slotRef} options={['كتابي', 'شفاهي']} isTarget handleSlot={handleSlot} />
-                <DropDownInput input_id="salleExam" title="القاعة " inputRef={subRef} options={subArray} />
-
-
-                
-
-                <Button variant="contained" color="primary" type="submit">
-                إضافة
-                </Button>
-              </Box>
-              {/*///////////////////////////the second row */}
-              <Box display="flex" flexDirection="row" gap={2}>
-      <Box  sx={{
-        '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off">
-        <FormControl fullWidth margin="normal">
-          <InputLabel id="category-label">الفئة</InputLabel>
-          <Select
-            labelId="category-label"
-            id="category-select"
-            value={category}
-            onChange={handleCategoryChange}
-          >
-            {Object.keys(options).map((key) => (
-              <MenuItem key={key} value={key}>{key}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      </AppBar>
+      <div>
+        <Box display="flex" flexDirection="column" flexGrow={1}>
+          <Box display="flex" flexDirection="row" flexWrap="wrap" p={2}>
+            {/*/////////////////////////////////////////////////////////////semestre box */}
+            <Box display="flex" flexDirection="row" alignItems="center" mt={2}>
+              <Typography variant="h6" fontWeight="bold" style={{ color: '#2A5551', fontFamily: 'Cairo', fontSize: '20px' }}>
+                إختر السداسية
+              </Typography>
+              <FormControl variant="outlined" margin="dense" sx={{ ml: 2, minWidth: 200 }}>
+                <InputLabel>السداسية</InputLabel>
+                <Select
+                  label="السداسية"
+                  inputRef={semRef}
+                  onChange={handleSlot}
+                >
+                  {[...Array(8).keys()].map(i => (
+                    <MenuItem value={i + 1} key={i}>السداسية {i + 1}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            {/*/////////////////////////////////////////////////////////////upload file csv */}
+            <Box display="flex" flexDirection="row" alignItems="center" mt={2}>
+              <Typography variant="h6" fontWeight="bold" style={{ color: '#2A5551', fontFamily: 'Cairo', fontSize: '20px' }}>
+                تحميل ملف من نوع
+              </Typography>
+              <Button variant="outlined" color="success" component="label" sx={{ ml: 2 }}>
+                CSV
+                <input hidden accept=".csv,.xlsx,.xls" multiple type="file" onChange={handleFiles} />
+              </Button>
+            </Box>
+          </Box>
         </Box>
-        <Box sx={{
-        '& > :not(style)': { mt: 1, width: '25ch' },
-      }}>
-
-        <FormControl fullWidth margin="normal"  disabled={!category}>
-          <InputLabel id="subcategory-label">الفئة المتفرعة منها</InputLabel>
-          <Select
-            labelId="subcategory-label"
-            id="subcategory-select"
-            value={subcategory}
-            onChange={handleSubcategoryChange}
-          >
-            {category && options[category].map((suboption) => (
-              <MenuItem key={suboption} value={suboption}>{suboption}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-
-      <Box display="flex" flexDirection="column" justifyContent="center">
-        <Typography variant="body1" sx={{ mt: 1 }}>
-        الفئة المختارة: {category || 'None'}
-        </Typography>
-        <Typography variant="body1">
-        الفئة الفرعية المختارة:  {subcategory || 'None'}
-        </Typography>
-      </Box>
-    </Box>
-                  {/*///////////////////////////the end second row */}
-
-            </form>
-                               {/*///////////////////////////////////////////////////////////// end form input*/}
-
-                </Box>
-                               {/*///////////////////////////////////////////////////////////// table d'exam*/}
-
-                <Box px={2} py={3}>
-                    <Typography variant="h6" fontWeight="bold" mb={2}>
-                    جدول الإمتحانات
-                    </Typography>
-
-                    <Box position="relative" height={400} overflow="auto">
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center">الإمتحان</TableCell>
-                                        <TableCell align="center">اليوم</TableCell>
-                                        <TableCell align="center">بداية الوقت</TableCell>
-                                        <TableCell align="center">نهاية الوقت</TableCell>
-                                        <TableCell align="center">المادة</TableCell>
-                                        <TableCell align="center">نوع الإمتحان</TableCell>
-                                        <TableCell align="center">القاعة</TableCell>
-                                        <TableCell align="center">
-                        <FormControl variant="outlined" size="small">
-                          <InputLabel id="category-filter-label">Category</InputLabel>
-                          <Select
-                            labelId="category-filter-label"
-                            id="category-filter"
-                            value={selectedCategory}
-                            onChange={(e) => handleCategoryTableChange(e, selectedCategory)}
-                            label="Category"
-                          >
-                            {Object.keys(options).map((category) => (
-                              <MenuItem key={category} value={category}>
-                                {category}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </TableCell>
-                      <TableCell align="center">
-                        <FormControl variant="outlined" size="small">
-                          <InputLabel id="subcategory-filter-label">Subcategory</InputLabel>
-                          <Select
-                            labelId="subcategory-label"
-                            id="subcategory-select"
-                            value={subcategory}
-                            onChange={handleSubcategoryChange}
-                          >
-                            {category && options[category].map((suboption) => (
-                              <MenuItem key={suboption} value={suboption}>{suboption}</MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </TableCell>
-                                        <TableCell align="center">
-                                            <Box display="flex" justifyContent="center" alignItems="center">
-                                                <Switch
-                                                    checked={toggle}
-                                                    onChange={handleToggle}
-                                                    color="primary"
-                                                    title={toggle ? "Sort By Date" : "Sort By Branch"}
-                                                />
-                                            </Box>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {loading ? (
-                                        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                                            <ThreeCircles
-                                                height="65"
-                                                width="65"
-                                                color="#23ca85"
-                                                visible={true}
-                                            />
-                                        </Box>
-                                    ) : (
-                                        sortedExams.map(item => (
-                                            <TableRow key={item._id}>
-                                                <TableCell align="center">{item.date}</TableCell>
-                                                <TableCell align="center">{item.time}</TableCell>
-                                                <TableCell align="center">{item.sem}</TableCell>
-                                                <TableCell align="center">{item.branch}</TableCell>
-                                                <TableCell align="center">{item.slot}</TableCell>
-                                                <TableCell align="center">{item.subcode}</TableCell>
-                                                <TableCell align="center">
-                                                    <Button variant="contained" color="secondary" onClick={() => handleDelete(item._id)}>
-                                                        Delete
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                                                   {/*///////////////////////////////////////////////////////////// end table */}
-
-                    <Box px={2} py={2} mt={2} display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body1">
-                        No of Exams scheduled: {exams.length}
-                    </Typography>
-                    <Box display="flex" gap={2}>
-                        <Button variant="contained"  onClick={handleClearAll}>
-                            CLEAR ALL
-                        </Button>
-                        <Button variant="contained"  onClick={handleNext}>
-                            NEXT
-                        </Button>
-                    </Box>
-                </Box>
-                </Box>
-    </Box>
+        <Container sx={{ mt: 2, ml: 2 }}>
+          <Box component="form" noValidate autoComplete="off" ref={formRef} onSubmit={handleSchedule}>
+            <TextField
+              required
+              id="NameExam"
+              name="NameExam"
+              label="اسم الإمتحان"
+              fullWidth
+              margin="normal"
+              value={NameExam}
+              onChange={e => setNameExam(e.target.value)}
+            />
+            <TextField
+              id="date"
+              label="تاريخ الإمتحان"
+              type="date"
+              value={DateExam}
+              onChange={(e) => setDateExam(e.target.value)}
+              sx={{ width: 220 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              fullWidth
+              margin="normal"
+            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['TimePicker']}>
+                <TimePicker
+                  label="توقيت الإمتحان"
+                  value={heureDebut}
+                  onChange={(newValue) => setHeureDebut(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <TimePicker
+                  label="توقيت نهاية الإمتحان"
+                  value={heureFin}
+                  onChange={(newValue) => setHeureFin(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <DropDownInput
+              input_id="typeExam"
+              title="نوع الإمتحان"
+              options={['نظري', 'تطبيقي']}
+              value={typeExam}
+              onChange={(value) => setTypeExam(value)}
+              isTarget={false}
+            />
+            <DropDownInput
+              input_id="matiereExam"
+              title="مادة الإمتحان"
+              options={categoriesList.map(cat => cat.name)}
+              value={matiereExam}
+              onChange={(value) => setMatiereExam(value)}
+              isTarget={true}
+              handleSlot={handleSlot}
+            />
+            <DropDownInput
+              input_id="groupe"
+              title="مجموعة الإمتحان"
+              options={filteredGroups.map(group => group.name)}
+              value={groupe}
+              onChange={(value) => setGroupe(value)}
+              isTarget={true}
+              handleSlot={handleSlot}
+            />
+            <DropDownInput
+              input_id="teachers"
+              title="أستاذ الإمتحان"
+              options={teachersList.map(teacher => teacher.name)}
+              value={teachers}
+              onChange={(value) => setTeachers(value)}
+              isTarget={false}
+            />
+            <FormControlLabel
+              control={<Switch checked={salleExam} onChange={() => setSalleExam(!salleExam)} />}
+              label="إضافة قاعة"
+            />
+            {salleExam && (
+              <DropDownInput
+                input_id="salle"
+                title="قاعة الإمتحان"
+                options={sallesList.map(salle => salle.name)}
+                value=""
+                onChange={(value) => console.log('Salle selected:', value)}
+                isTarget={false}
+              />
+            )}
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+              جدولة الإمتحان
+            </Button>
+          </Box>
+        </Container>
+        <Alert
+          severity="success"
+          sx={{ width: '50%', mt: 2, mx: 'auto', visibility: cleared ? 'visible' : 'hidden' }}
+        >
+          تم حذف الإمتحانات بنجاح!
+        </Alert>
+      </div>
+      <Container sx={{ mt: 2 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6" fontWeight="bold" style={{ color: '#2A5551', fontFamily: 'Cairo', fontSize: '20px' }}>
+            الإمتحانات المجدولة
+          </Typography>
+          <Button variant="contained" color="error" onClick={handleClearAll} sx={{ mb: 2 }}>
+            حذف الكل
+          </Button>
+        </Box>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="right">اسم الإمتحان</TableCell>
+                <TableCell align="right">تاريخ الإمتحان</TableCell>
+                <TableCell align="right">وقت بداية الإمتحان</TableCell>
+                <TableCell align="right">وقت نهاية الإمتحان</TableCell>
+                <TableCell align="right">نوع الإمتحان</TableCell>
+                <TableCell align="right">مادة الإمتحان</TableCell>
+                <TableCell align="right">مجموعة الإمتحان</TableCell>
+                <TableCell align="right">أستاذ الإمتحان</TableCell>
+                <TableCell align="right">إجراءات</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {sortedExams.map((exam) => (
+                <TableRow key={exam.id}>
+                  <TableCell align="right">{exam.name}</TableCell>
+                  <TableCell align="right">{exam.date}</TableCell>
+                  <TableCell align="right">{exam.startTime}</TableCell>
+                  <TableCell align="right">{exam.endTime}</TableCell>
+                  <TableCell align="right">{exam.type}</TableCell>
+                  <TableCell align="right">{exam.subject}</TableCell>
+                  <TableCell align="right">{exam.group}</TableCell>
+                  <TableCell align="right">{exam.teacher}</TableCell>
+                  <TableCell align="right">
+                    <Button variant="contained" color="error" onClick={() => handleDelete(exam.id)}>
+                      حذف
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     </div>
-    </div>
-  )
+  );
 }
