@@ -3,7 +3,12 @@ import axios from 'axios';
 import { Container, Nav, Col, Row, Card, Form, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { MdArrowForwardIos } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
 function ParentProfile() {
+  const navigate = useNavigate();
+
   const { id } = useParams();
 const[error,setError]=useState('');
 const [loading,setLoading]= useState(true);
@@ -49,18 +54,21 @@ const [parent,setParent] = useState(null);
     }
     fetchParent();
   }, [id]);
+  const goBack = () => {
+    navigate(-1); // Go back to the previous page
+};
   
   return (
     (loading &&  'loading' ||       <Container fluid className="px-4 mt-4">
     <Nav className="nav nav-borders">
-      <Nav.Link>الملف الشخصي</Nav.Link>
+      <Nav.Link className='titre'>الملف الشخصي للولي</Nav.Link>
     </Nav>
     <hr className="mt-0 mb-4" />
    
       <Row>
         <Col xl={4}>
           <Card className="mb-4 mb-xl-0">
-            <Card.Header>صورة الملف الشخصي</Card.Header>
+            <Card.Header className='titre-1'>صورة الولي </Card.Header>
             <Card.Body className="text-center">
             <img className="img-account-profile rounded-circle mb-2 img-fluid" src={`${url}/parent/${parent_image}`} alt="" />
               <div className="small font-italic text-muted mb-4"> </div>
@@ -70,7 +78,7 @@ const [parent,setParent] = useState(null);
         </Col>
         <Col xl={8}>
           <Card className="mb-4">
-            <Card.Header>تفاصيل الحساب</Card.Header>
+            <Card.Header className='titre-1'>تفاصيل الحساب</Card.Header>
             <Card.Body>
              
                 <Row className="mb-3">
@@ -130,7 +138,8 @@ const [parent,setParent] = useState(null);
           </Card>
         </Col>
       </Row>
-  
+      <Button variant="secondary" style={{ width: '100px' ,height:'50px', backgroundColor: '#EFAC41',fontFamily:'Cairo',fontSize:'15px',fontWeight:'700',marginBottom:'15px',borderRadius:'20px',borderColor:'#B8BDBB' }}  onClick={goBack}><MdArrowForwardIos />رجوع</Button>
+
   </Container> )
   );
 }

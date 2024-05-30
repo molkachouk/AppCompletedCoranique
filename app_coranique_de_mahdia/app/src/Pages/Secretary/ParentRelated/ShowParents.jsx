@@ -6,12 +6,15 @@ import TableTemplate from '../../../Components/TableTemplate'
 import {Button} from 'react-bootstrap'
 import { deleteUser } from '../../../redux/userRelated/userHandle';
 import {
-    Paper, Box,IconButton
+    Paper, Box,IconButton,
+    AppBar,
+    Typography
 } from '@mui/material';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import SpeedDialTemplate from '../../../Components/SpeedDialTemplate'
-
+import { MdRemoveRedEye } from "react-icons/md";
+import { MdEditDocument } from "react-icons/md";
 import * as React from 'react';
 
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -69,16 +72,29 @@ const ShowParent = () => {
 
     const parentColumns = [
         { id: 'name', label: 'الاسم', minWidth: 100 },
+        { id: 'prename', label: 'اللقب', minWidth: 100 },
+        { id: 'namefrench', label: 'nom', minWidth: 100 },
+        { id: 'prenamefrench', label: 'prenom', minWidth: 100 },
+        { id: 'telephone', label: 'الهاتف القار', minWidth: 100 },
+        { id: 'mobile', label: 'الهاتف الجوال', minWidth: 100 },
+        { id: 'address', label: 'العنوان', minWidth: 100 },
+        { id: 'CIN', label: 'رقم بطاقة التعريف', minWidth: 100 },
         { id: 'email', label: 'البريد الالكتروني', minWidth: 100 },
-        {id:'mobile',label:'الهاتف',minWidth:100},
        
     ]
 
     const parentRows = parentsList && parentsList.length > 0 && parentsList.map((parent) => {
         return {
             name: parent.name,
+            prename: parent.prename,
+            namefrench: parent.namefrench,
+            prenamefrench: parent.prenamefrench,
+
+            telephone: parent.telephone,
+            mobile: parent.mobile,
+            address: parent.address,
+            CIN: parent.CIN,
             email: parent.email,
-            mobile:parent.mobile,
             id: parent._id,
           
         };
@@ -115,24 +131,20 @@ const ShowParent = () => {
                     <PersonRemoveIcon color="error" />
                 </IconButton>
                 {/* <ToastContainer />  */}
-                <Button variant="contained" style={{backgroundColor:'#080a43',
-    color:'#fff',
-    '&:hover' :{
-      backgroundColor:'#0a1e82'
-    }}}
+                <IconButton variant="contained" style={{
+     color: '#EFAC41',
+    }}
                     onClick={() => navigate("/ParentProfile/" + row.id)}
                    >
-                      عرض البيانات
-                </Button>
-                <Button variant="contained" style={{backgroundColor:'#080a43',
-    color:'#fff',
-    '&:hover' :{
-      backgroundColor:'#0a1e82'
-    }}}
+                      <MdRemoveRedEye />
+                </IconButton>
+                <IconButton variant="contained" style={{
+     color: '#EFAC41',
+    }}
                     onClick={() => navigate("/UpdateParent/" + row.id)}
                    >
-                      تغيير البيانات 
-                </Button>
+                      <MdEditDocument /> 
+                </IconButton>
                 <React.Fragment>
                     <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
                        
@@ -194,6 +206,24 @@ const ShowParent = () => {
 
     return (
         <div style={{padding:'25px'}}>
+            <div>
+            <AppBar position="static" sx={{marginTop:'20px', direction:'ltr',backgroundColor:'white'}}>
+      
+       
+      <Typography
+        variant="h5"
+        noWrap
+        component="div"
+        sx={{ flexGrow: 1, alignSelf: 'flex-end',color:'#2A5551',fontFamily:'Cairo',fontSize:'30px',margin:'10px 0px 10px 0px'}}
+      >
+       <span style={{ fontWeight:'700'}}>  قائمة الأولياء</span>
+      </Typography>
+
+      
+      
+    
+  </AppBar>
+            </div>
             {loading ?
                 <div>Loading...</div>
                 :
@@ -222,6 +252,7 @@ const ShowParent = () => {
                              <SpeedDialTemplate actions={actions} /> 
                         </Paper>
                     }
+
                 </>
             }
             {/* <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} /> */}

@@ -8,26 +8,40 @@ const AddExamen = async (req, res) => {
     console.log('Examen add Request:', req.body);
 
     try {
-        const { NameExam, DateExam, heureDebut, heureFin, typeExam, matiereExam, salleExamId, teachers, groupe ,recite,period} = req.body;
+        const { NameExam, DateExam, heureDebut, heureFin, typeExam, matiereExam, salleExam, teachers, groupe ,recite,period} = req.body;
+
+        // Find the Salle by its ID
+        const salle = await Salle.findById(salleExam);
+        if (!salle) {
+            return res.status(404).send({ error: 'Salle not found' });
+        }
 
         // Find the Categorie by name_categorie
-        const categorie = await Categorie.findOne({ name_categorie: matiereExam });
+        let categorie;
+        // Attempt to find the Categorie by _id first
+        categorie = await Categorie.findById(matiereExam._id);
+
+        // If not found by _id, try finding by name_categorie
+        if (!categorie) {
+            categorie = await Categorie.findOne({ name_categorie: matiereExam.name_categorie });
+        }
+
         if (!categorie) {
             return res.status(404).send({ error: 'Categorie not found' });
         }
 
         // Find the Group by name_group and ensure it is associated with the found Categorie
-        const groupDoc = await Group.findOne({ name_group: groupe, name_categorie: categorie._id });
+        const groupDoc = await Group.findById(groupe);
         if (!groupDoc) {
-            return res.status(404).send({ error: 'Group with the specified category not found' });
+            return res.status(404).send({ error: 'Group not found' });
         }
 
-        // Find the Salle by its ID
-        const salle = await Salle.findById(salleExamId);
-        if (!salle) {
-            return res.status(404).send({ error: 'Salle not found' });
+        // Ensure the group is associated with the correct category
+        if (groupDoc.name_categorie.toString() !== matiereExam._id) {
+            return res.status(404).send({ error: 'Group is not associated with the specified category' });
         }
 
+        
         // Find Teacher documents by their IDs
         const teacherDocs = await Teacher.find({ _id: { $in: teachers } });
         if (teacherDocs.length !== teachers.length) {
@@ -120,7 +134,7 @@ const UpdateExamen = async (req, res) => {
     console.log('Examen update Request:', req.body);
 
     const updates = Object.keys(req.body);
-    const allowedUpdates = ['NameExam', 'DateExam', 'heureDebut', 'heureFin', 'typeExam', 'matiereExam', 'salleExamId', 'teachers', 'groupe'];
+    const allowedUpdates = ['NameExam', 'DateExam', 'heureDebut', 'heureFin', 'typeExam', 'matiereExam', 'salleExamId', 'teachers', 'groupe','period','recite'];
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidOperation) {
@@ -128,7 +142,7 @@ const UpdateExamen = async (req, res) => {
     }
 
     try {
-        const { NameExam, DateExam, heureDebut, heureFin, typeExam, matiereExam, salleExamId, teachers, groupe } = req.body;
+        const { NameExam, DateExam, heureDebut, heureFin, typeExam, matiereExam, salleExamId, teachers, groupe,period,recite } = req.body;
 
         // Find the existing examen
         const examen = await Examen.findById(req.params.id);
@@ -170,6 +184,11 @@ const UpdateExamen = async (req, res) => {
             if (teacherDocs.length !== teachers.length) {
                 return res.status(404).send({ error: 'One or more teachers not found' });
             }
+        }
+
+        let reciteToAdd = null;
+        if (categorie.name_categorie === "تجويد") {
+            reciteToAdd = recite;
         }
 
         // Check for conflicts if heureDebut is being updated or if salle, teachers, or group are being updated

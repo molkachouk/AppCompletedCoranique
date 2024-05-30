@@ -337,10 +337,10 @@ function AddStudent() {
                     <Card className='mb-4 mb-xl-0' >
                         <Card.Body className='text-center'>
 
-                            <h2 className="fw-bold mb-2 text-center" style={{ color: "#AF4E09" }}>إضافة تلميذ</h2>
+                            <h2 className="fw-bold mb-2 text-center" style={{ fontFamily: 'Cairo, sans-serif',color: "#AF4E09" }}>إضافة تلميذ</h2>
                             <Form onSubmit={handleSubmit} encType='multipart/form-data'>
 
-                            <Form.Label className="small mb-1"> الإسم </Form.Label>
+                            <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> الإسم </Form.Label>
                                 <Form.Control type="text" placeholder="ادخل اسمك الكامل" name='name' value={name} onChange={(e)=>setName(e.target.value)} />
                                 
                                 <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '19px', marginTop: '25px' }}>  nom </Form.Label>
@@ -350,16 +350,16 @@ function AddStudent() {
 
                                 <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '19px', marginTop: '25px' }}> prenom </Form.Label>
                         <Form.Control type="text" placeholder="enter le prenom" value={prenamefrench} onChange={(e) => setPrenamefrench(e.target.value)} />
-                                <Form.Label className="small mb-1"> تاريخ الولادة </Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> تاريخ الولادة </Form.Label>
                                 <Form.Control type="date" placeholder="ادخل  تاريخ الولادة" name='date_birth' value={date_birth}  onChange={handleDateOfBirthChange} />
                                
                                 {showGuardianIDField  && (
                                     <>
-                                        <Form.Label className="small mb-1"> رقم بطاقة التعريف الولي </Form.Label>
+                                        <Form.Label className="small mb-1 " style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> رقم بطاقة التعريف الولي </Form.Label>
                                         <Form.Control type="number" placeholder="ادخل رقم بطاقة التعريف" name='father_CIN' value={father_CIN} onChange={(e)=>setFatherCin(e.target.value)}   />
                                         
                                             <div className="add-parent-button" style={{ }}>
-                                            <Button style={{ width: '100%' , backgroundColor: !guardianExists ? '#124a44' : 'red' }} className="scrolltoTop" disabled={!guardianExists}  onClick={() => {navigate("/AddParent");handleScrollToTop(); }}>إضافة ولي أمرك</Button>
+                                            <Button style={{ width: '100%' , backgroundColor: !guardianExists ? '#124a44' : 'red', fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}  className="scrolltoTop" disabled={!guardianExists}  onClick={() => {navigate("/AddParent");handleScrollToTop(); }}>إضافة ولي أمرك</Button>
                                              </div>
                                         
                                         
@@ -367,22 +367,22 @@ function AddStudent() {
                                 )}
                                 {!showGuardianIDField  && (
                                     <>
-                                        <Form.Label className="small mb-1"> رقم بطاقة التعريف الخاص بك </Form.Label>
+                                        <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> رقم بطاقة التعريف الخاص بك </Form.Label>
                                         <Form.Control type="number" placeholder="ادخل رقم بطاقة التعريف" name='CIN_student' value={CIN_student} onChange={(e)=>setCINstudent(e.target.value)}   />
                 
                                     </>
                                 )}
                                 
-                                <Form.Label className="small mb-1"> مكان الولادة </Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> مكان الولادة </Form.Label>
                                 <Form.Control type="text" placeholder="ادخل  مكان الولادة" name='place_birth' value={place_birth} onChange={(e)=>setPlaceOfBirth(e.target.value)} />
-                                <Form.Label className="small mb-1" > مستوى الدراسي </Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }} > مستوى الدراسي </Form.Label>
                                 <Form.Select aria-label="مستوى الدراسي" name='study_level' value={study_level} onChange={(e)=>setStudyLevel(e.target.value)}>
                                     <option value=''>اختر مستوى الدراسة</option>
                                     <option value="1">مستوى واحد</option>
                                     <option value="2">مستوى اثنين</option>
                                     <option value="3">مستوى ثلاثة</option>
                                 </Form.Select>
-                                <Form.Label className="small mb-1"> المؤسسة التعليمية </Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> المؤسسة التعليمية </Form.Label>
                                 <Form.Select aria-label="المؤسسة التعليمية" name='establishment' value={establishment} onChange={(e)=>setEstablishment(e.target.value)}>
                                     <option>اختر المؤسسة التعليمية</option>
                                     <option value="1">مؤسسة واحدة</option>
@@ -390,19 +390,19 @@ function AddStudent() {
                                     <option value="3">مؤسسة ثلاثة</option>
                                 </Form.Select>
 
-                                <Form.Label className="small mb-1"> البريد الالكتروني</Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> البريد الالكتروني</Form.Label>
                                 <Form.Control type="email" placeholder="ادخل البريد الالكتروني" name='email' value={email} onChange={(e)=>setEmail(e.target.value)}  />
 
                                 <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> الهاتف الجوال</Form.Label>
                                 <Form.Control type="tel" id="phone"  pattern="[0-9]{2}[0-9]{3}[0-9]{3}" placeholder="ادخل أدخل رقم الهاتف" name='mobile' value={mobile} onChange={(e)=>setMobile(e.target.value)} /> 
 
-                                <Form.Label className="small mb-1">كلمة العبور</Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}>كلمة العبور</Form.Label>
                                 <Form.Control type="password" placeholder="ادخل كلمة العبور" name='password' value={password} onChange={(e)=>setPassword(e.target.value)}  />
 
 
                                 
     
-                                <Form.Label className="small mb-1">  الجنس</Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}>  الجنس</Form.Label>
                                 <div  className="mb-3">
                                     <Form.Check
                                         inline
@@ -423,14 +423,14 @@ function AddStudent() {
                                     
                                     </div>                              
 
-                                <Form.Label className="small mb-1"> مستوى الحفظ </Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}> مستوى الحفظ </Form.Label>
                                 <Form.Select aria-label="مستوى الحفظ" name='memo_level' value={memo_level} onChange={(e)=>setMemoLevel(e.target.value)}>
                                     <option>إختر مستوى الحفظ</option>
                                     {[...Array(60)].map((_, index) => (
                                     <option key={index + 1} value={index + 1}>{index + 1}</option>
                                     ))}
                                 </Form.Select>
-                                <Form.Label className="small mb-1">الوحدات </Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}>الوحدات </Form.Label>
                                 <Form.Select aria-label="الوحدات" name='units' value={units} onChange={(e)=>setUnits(e.target.value)}>
                                     <option>إختر الوحدات المناسبة</option>
                                     <option value="1">1</option>
@@ -441,7 +441,9 @@ function AddStudent() {
                                     <option value="6">6</option>
 
                                 </Form.Select>
-                                <Form.Label className="small mb-1">إضافة الى مجموعة </Form.Label>
+                                <Form.Label className="small mb-1" style={{ fontFamily: 'Cairo, sans-serif', fontSize: '15px', marginTop: '25px' }}
+                                
+                                >إضافة الى مجموعة </Form.Label>
                                 <Form.Select name='name_group' value={name_group} onChange={(e)=>setgroupName(e.target.value)}>
     <option></option>
     {groupLoading ? (

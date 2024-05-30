@@ -37,24 +37,19 @@ export const deleteExamen = (id, address) => async (dispatch) => {
         dispatch(getError(error));
     }
 }
-export const addExamen = (formData, address) => async (dispatch) => {
-    dispatch(getRequest());
+export const addExamen = async (examData, address) => {
     try {
-        const result = await axios.post(`api/${address}Create`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        
-        if (result.data )  {
-            dispatch(stuffAdded(result.data)); // Dispatch stuffAdded action with form data
+      const response = await axios.post(`http://localhost:5000/api/${address}Create`, examData, {
+        headers: {
+            'Content-Type': 'application/json'
         }
-        else {
-            dispatch(getFailed(result.data.message));
-        }
-        
-    } catch (error) {
-        dispatch(getError(error));
     }
-};
+       );
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message || 'Failed to add exam');
+    }
+  };
 export const updateExamen = (formData, id, address) => async (dispatch) => {
     dispatch(getRequest());
 

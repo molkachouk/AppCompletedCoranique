@@ -69,7 +69,6 @@ period: {
     required: true,
     unique: true,
     trim: true,
-    maxlength: 8 // Limiting the maximum length to 8 characters
 
 },
 

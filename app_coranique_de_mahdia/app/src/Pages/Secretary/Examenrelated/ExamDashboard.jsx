@@ -16,7 +16,8 @@ import {
   TableRow,
   TextField,
   Typography,
-  Switch
+  Switch,
+ Modal
 } from '@mui/material';
 import { MdDelete } from "react-icons/md";
 import { MdEditDocument } from "react-icons/md";
@@ -37,7 +38,8 @@ import { getAllExamen } from '../../../redux/examenRelated/examenHandle';
 import{getAllCategories} from '../../../redux/categorieRelated/categorieHandle';
 import dayjs from 'dayjs';
 import axios from 'axios';
-
+import { addExamen } from '../../../redux/examenRelated/examenHandle';
+import ModalUpdate from './ModalUpdate';
 function DropDownInput({ input_id, title, inputRef, options, value, onChange, isTarget, handleSlot }) {
   const handleChange = (event) => {
     const selectedValue = event.target.value;
@@ -68,19 +70,7 @@ function DropDownInput({ input_id, title, inputRef, options, value, onChange, is
     </FormControl>
   );
 }
-
-
-
 export default function ExamDashboard() {
-
-
-  const semRef = useRef();
-    const dateRef = useRef();
-    const timeRef = useRef();
-    const branchRef = useRef();
-    const slotRef = useRef();
-    const subRef = useRef();
-    const formRef = useRef();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -90,7 +80,6 @@ export default function ExamDashboard() {
     const { teachersList, loading: teachersLoading, error: teachersError } = useSelector((state) => state.teacher);
     const { categoriesList, loading: categoriesLoading, error: categoriesError } = useSelector((state) => state.categorie);
     const { sallesList} = useSelector((state) => state.salle);
-    console.log(categoriesList)
 
 
 
@@ -118,12 +107,25 @@ export default function ExamDashboard() {
     const [exams, setExams] = useState([]);
     const [cleared, setCleared] = React.useState(false);
     const [category, setCategory] = useState('');
-
+   
   const [subcategory, setSubcategory] = useState('');
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [selectedExamId, setSelectedExamId] = useState(null);
+
+
+  const handleOpenModal = (examId) => {
+    setSelectedExamId(examId);
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedExamId(null);
+  };
+
  // const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedsubCategory, setSelectedsubCategory] = useState('');
   const selectedCategory = categoriesList.find(category => category._id === matiereExam);
-  console.log(selectedCategory)
   const matiereExamField = selectedCategory && selectedCategory.name_categorie === 'تجويد' ? (
     <Box
       sx={{
@@ -148,9 +150,8 @@ export default function ExamDashboard() {
       />
     </Box>
   ) : null;
-  console.log(matiereExamField)
-console.log(matiereExam)
 
+  const url="http://localhost:5000";
 
 
   useEffect(() => {
@@ -244,42 +245,109 @@ const handleMatiereChange = (event) => {
     return () => {};
   }, [cleared]);
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(heureDebut);
+    console.log(heureFin);
+    const formattedHeureDebut = dayjs(heureDebut).format('HH:mm');
+    const formattedHeureFin = dayjs(heureFin).format('HH:mm');
+    console.log(formattedHeureFin);
+    console.log(formattedHeureDebut);
 
-  const handleSchedule = async (event) => {
+    const selectedMatiere = categoriesList.find(categorie => categorie._id === matiereExam);
+console.log(selectedMatiere);
+    const examData = {
+      NameExam,
+      DateExam,
+      heureDebut: formattedHeureDebut,
+      heureFin: formattedHeureFin,      // Use formatted time
+      typeExam,
+      matiereExam: {
+        _id: selectedMatiere._id,
+        name_categorie: selectedMatiere.name_categorie
+      },
+      salleExam,
+      teachers,
+      groupe,
+      recite,
+      period
+    };
+    if (selectedMatiere.name_categorie === 'تجويد') {
+      examData.recite = recite;
+    } else {
+      examData.recite = null;
+    }
+    const address = 'Examen'; // Use the correct endpoint address
+
+    try {
+      console.log(examData)
+      const response = await addExamen(examData, address); // Assuming addExamen returns the added exam
+      const newExam = response.data.examen; // Assuming the response contains the added exam
+      setExams(prevExams => [...prevExams, newExam]); // Update the list of exams with the newly added exam
+      // Clear form fields after successful submission
+      setNameExam('');
+      setDateExam('');
+      setHeureDebut(dayjs());
+      setHeureFin(dayjs());
+      setTypeExam('');
+      setMatiereExam('');
+      setSalleExam('');
+      setGroupe('');
+      setTeachers([]);
+      setPeriod('');
+      setRecite('');
+    } catch (error) {
+      console.error('Failed to add exam:', error);
+    }
+  };
+  /*const handleSubmit = async (event) => {
       event.preventDefault();
-     
-      
+     console.log(selectedCategory.name_categorie)
+     try { 
       const formData = new FormData();
   
-      formData.append('NameExam', NameExam);
-      formData.append('DateExam', DateExam);
-      formData.append('heureDebut', heureDebut);
-      formData.append('heureFin', heureFin);
-      formData.append('typeExam', typeExam);
-      formData.append('matiereExam', matiereExam);
-      formData.append('salleExam', salleExam);
-      formData.append('groupe', groupe);
-      formData.append('teachers', teachers);
-      formData.append('period', period);
-      formData.append('recite', recite);
+    formData.append('NameExam', NameExam);
+    console.log(NameExam);
+    formData.append('DateExam', DateExam);
+    console.log(DateExam);
+
+    formData.append('heureDebut', dayjs(heureDebut).format('HH:mm')); // Format heureDebut to HH:mm
+    console.log(heureDebut);
+
+    formData.append('heureFin', dayjs(heureFin).format('HH:mm')); // Format heureFin to HH:mm
+    console.log(heureFin)
+    formData.append('typeExam', typeExam);
+    console.log(typeExam)
+    const selectedCategory = categoriesList.find(category => category._id === matiereExam);
+    if (selectedCategory) {
+        formData.append('matiereExam', selectedCategory.name_categorie); // Append the category name
+    }
+        console.log(selectedCategory.name_categorie);
+    formData.append('salleExam', salleExam);
+    console.log(salleExam);
+    formData.append('groupe', groupe);
+    console.log(groupe);
+    formData.append('teachers', JSON.stringify(teachers)); // Convert to JSON string
+    console.log(teachers);
+    formData.append('period', period);
+    console.log(period);
+    formData.append('recite', recite);
+    
+    console.log(recite);
   
-      try {
+    console.log('Form Data:', formData); // Debugging console log
 
-          const response = await axios.post('/api/ExamenCreate', formData , {
-              headers: {
-                  'Content-Type': 'multipart/form-data'
-              }
-          });
+    const response = await axios.post(`api/ExamenCreate`, formData);
 
-          console.log(response.data);
+        console.log('Response:', response.data);
 
-          toast.success('examen registered successfully.');
+
       } catch (error) {
           console.error('add failed:', error);
       
       }
       // Handle scheduling
-  };
+  };*/
 
   const handleToggle = () => {
     setSortBy(sortBy === 'date' ? 'heureDebut' : 'date');
@@ -300,6 +368,7 @@ const sortedExams = exams.slice().sort((a, b) => {
     return new Date(a.heureDebut) - new Date(b.heureDebut);
   }
 });
+
 
   const handleDelete =async (id) => {
     try {
@@ -341,7 +410,6 @@ const sortedExams = exams.slice().sort((a, b) => {
   return (
     <div>
     <AppBar position="static" sx={{marginTop:'20px', direction:'ltr',backgroundColor:'white'}}>
-      
        
         <Typography
           variant="h5"
@@ -351,10 +419,6 @@ const sortedExams = exams.slice().sort((a, b) => {
         >
          <span style={{ fontWeight:'700'}}> لوحة التحكم:</span>الإمتحانات
         </Typography>
-
-        
-        
-      
     </AppBar>
     <div>
     <Box display="flex" flexDirection="column" flexGrow={1}>
@@ -368,7 +432,7 @@ const sortedExams = exams.slice().sort((a, b) => {
                             <InputLabel>السداسية</InputLabel>
                             <Select
                                 label="السداسية"
-                                inputRef={semRef}
+                               
                                 onChange={handleSlot}
                             >
                                 {[...Array(8).keys()].map(i => (
@@ -403,7 +467,7 @@ const sortedExams = exams.slice().sort((a, b) => {
                     </Typography>
                                        {/*/////////////////////////////////////////////////////////////start form*/}
 
-                    <form ref={formRef} onSubmit={handleSchedule}>
+                    <form  onSubmit={handleSubmit}>
 
               <Box display="flex" flexDirection="row" gap={2}>
               <Box
@@ -443,7 +507,6 @@ const sortedExams = exams.slice().sort((a, b) => {
       >
         <DatePicker
           id="date"
-          inputRef={dateRef}
           value={DateExam ? dayjs(DateExam) : null}
           onChange={(newValue) => {
             if (newValue) {
@@ -482,11 +545,13 @@ const sortedExams = exams.slice().sort((a, b) => {
           position: 'relative',
           
         }}>
-      <DemoContainer components={['TimePicker']}>
+      {/*<DemoContainer components={['TimePicker']}>
         <TimePicker label="بداية الوقت  " sx={{ borderRadius: '50px', '& .MuiInputLabel-root': { right:30, transformOrigin: 'right' },'& .MuiOutlinedInput-root': { borderRadius: '50px', }, }} 
         value={heureDebut}      
         onChange={(newValue) => setHeureDebut(newValue)}/>
-      </DemoContainer>
+      </DemoContainer>*/}
+      <input type='time' value={heureDebut.format('HH:mm')} onChange={(e) => setHeureDebut(dayjs(e.target.value, 'HH:mm'))} label="بداية الوقت "/>   
+
       </Box>
       <Box  sx={{
           height: '100%',
@@ -495,10 +560,12 @@ const sortedExams = exams.slice().sort((a, b) => {
           
           
         }}>
-      <DemoContainer components={['TimePicker']} >
+      {/*<DemoContainer components={['TimePicker']} >
         <TimePicker label="نهاية الوقت " sx={{  borderRadius: '50px','& .MuiInputLabel-root': { right:30, transformOrigin: 'right' },'& .MuiOutlinedInput-root': { borderRadius: '50px', }, }} value={heureFin}      
         onChange={(newValue) => setHeureFin(newValue)}          />
-      </DemoContainer>
+      </DemoContainer>*/}
+            <input type='time' value={heureFin.format('HH:mm')}  onChange={(e) => setHeureFin(dayjs(e.target.value, 'HH:mm'))}  label="نهاية الوقت "/>   
+
       </Box>
     </LocalizationProvider>
                        {/*/////////////////////////////////////////////////////////////end date input*/}
@@ -508,7 +575,6 @@ const sortedExams = exams.slice().sort((a, b) => {
                        <DropDownInput
                         input_id="typeExam"
                         title="نوع الإمتحان"
-                        inputRef={slotRef}
                         options={['كتابي', 'شفاهي']}
                         value={typeExam}
                         onChange={setTypeExam}
@@ -523,7 +589,7 @@ const sortedExams = exams.slice().sort((a, b) => {
                         <Select
                           labelId={`salleExam-label`}
                           id={`salleExam`}
-                          inputRef={subRef}
+                          
                           onChange={(event) => setSalleExam(event.target.value)}
                           label='القاعة'
                           value={salleExam}
@@ -555,14 +621,14 @@ const sortedExams = exams.slice().sort((a, b) => {
   value={matiereExam}
   onChange={(event)=>setMatiereExam(event.target.value)}
 />*/}
-<FormControl variant="outlined" margin="dense" sx={{ mb: 2, minWidth: 200, mr: { md: 2, sm: 0 }, borderRadius: 50,'& .MuiOutlinedInput-root': {
-      borderRadius: 50, // Add border radius
-    }, }}>
+                <FormControl variant="outlined" margin="dense" sx={{ mb: 2, minWidth: 200, mr: { md: 2, sm: 0 }, borderRadius: 50,'& .MuiOutlinedInput-root': {
+                      borderRadius: 50, // Add border radius
+                    }, }}>
                   <InputLabel id={`matiereExam-label`}>المادة</InputLabel>
                   <Select
                       labelId={`matiereExam-label`}
                       id={`matiereExam`}
-                      onChange={(event) => setMatiereExam(event.target.value)}
+                      onChange={handleMatiereChange}
                       label='المادة'
                       value={matiereExam}
                     >
@@ -726,7 +792,7 @@ const sortedExams = exams.slice().sort((a, b) => {
                     
                   </Box>
                   {/*///////////////////////////the end second row */}
-                  <Button variant="contained" color="primary" type="submit">
+                  <Button variant="contained" color="primary" type="submit" sx={{ borderRadius: 50 }}>
                 إضافة
                 </Button>
             </form>
@@ -803,19 +869,25 @@ const sortedExams = exams.slice().sort((a, b) => {
                                                 <MdDelete />
 
                                                 </Button>
-                                                <Button variant="contained"  >
+                                                <Button variant="contained" onClick={() => handleOpenModal(item._id)} >
                                                 <MdEditDocument />
 
                                                 </Button>
+                                                <ModalUpdate openModal={openModal} handleCloseModal={handleCloseModal}  examId={selectedExamId} />
+
+                                                {/* Modal */}
+
+            
                                             </TableCell>
                                         </TableRow>
                                     ))
                                 )}
+                                 {/* Modal for editing exam */}
+      
                                 </TableBody>
                             </Table>
                         </TableContainer>
                     </Box>
-                                                   {/*///////////////////////////////////////////////////////////// end table */}
 
                     <Box px={2} py={2} mt={2} display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="body1">

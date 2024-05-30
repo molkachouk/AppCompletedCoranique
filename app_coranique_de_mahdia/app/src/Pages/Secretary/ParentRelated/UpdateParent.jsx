@@ -5,6 +5,7 @@ import { useNavigate,Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { updateUser } from '../../../redux/userRelated/userHandle';
+import { MdArrowForwardIos } from "react-icons/md";
 
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -140,7 +141,9 @@ function UpdateParent() {
     dispatch(updateUser(fields, id, "Secretary"));
     navigate(-1);*/
   }
-
+  const goBack = () => {
+    navigate(-1); // Go back to the previous page
+};
    
 
   return (
@@ -148,7 +151,7 @@ function UpdateParent() {
    
    <Form onSubmit={submitHandler} encType='multipart/form-data'>
       <Nav className="nav nav-borders">
-        <Nav.Link>الملف الشخصي</Nav.Link>
+        <Nav.Link className='titre' style={{fontSize:'30px'}}>تحديث الملف الشخصي</Nav.Link>
       </Nav>
       <hr className="mt-0 mb-4" />
       <Row>
@@ -158,7 +161,7 @@ function UpdateParent() {
                 <Card.Body className="text-center">
 
                 {previewImage ? (
-                <img className="img-account-profile rounded-circle mb-2  img-fluid" src={previewImage} alt="Preview" />
+                <img className="img-account-profile rounded-circle mb-2  img-fluid"  src={previewImage} alt="Preview" />
                 ) : (
                   <img className="img-account-profile rounded-circle mb-2 img-fluid" src={`${url}/parent/${parent_image}`} alt="" />
                 )}              <div className="small font-italic text-muted mb-4">JPG أو PNG بحجم لا يتجاوز 5 ميجابايت</div>
@@ -171,7 +174,7 @@ function UpdateParent() {
         </Col>
         <Col xl={8}>
           <Card className="mb-4">
-            <Card.Header>تفاصيل الحساب</Card.Header>
+            <Card.Header className='photo-text' >تفاصيل الحساب</Card.Header>
             <Card.Body>
              
                 <Row className="mb-3">
@@ -233,7 +236,10 @@ function UpdateParent() {
         </Col>
       </Row>
       </Form>
+      <Button variant="secondary" style={{ width: '100px' ,height:'50px', backgroundColor: '#EFAC41',fontFamily:'Cairo',fontSize:'15px',fontWeight:'700',marginBottom:'15px',borderRadius:'20px',borderColor:'#B8BDBB' }}  onClick={goBack}><MdArrowForwardIos />رجوع</Button>
+
     </Container>
+    
   );
 }
 
