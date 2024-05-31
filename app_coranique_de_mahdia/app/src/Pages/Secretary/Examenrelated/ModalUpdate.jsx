@@ -25,14 +25,14 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
 
     const [NameExam, setNameExam] = useState('');
     const [DateExam, setDateExam] = useState('');
-    const [heureDebut, setHeureDebut] = useState(dayjs());
-    const [heureFin, setHeureFin] = useState(dayjs());
+    const [heureDebut, setHeureDebut] = useState(dayjs().format('HH:mm'));
+    const [heureFin, setHeureFin] = useState(dayjs().format('HH:mm'));
     const [typeExam, setTypeExam] = useState('');
     const [matiereExam, setMatiereExam] = useState('');
     const [salleExam, setSalleExam] = useState(false);
     const [groupe, setGroupe] = useState('');
     const [teachers, setTeachers] = useState([]);
-     const [period, setPeriod] = useState('');
+    const [period, setPeriod] = useState('');
     const [recite, setRecite] = useState('');
     const [cleared, setCleared] = React.useState(false);
     const [filteredGroups, setFilteredGroups] = useState([]);
@@ -40,18 +40,22 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
 
     useEffect(() => {
       async function fetchExamen() {
+        console.log(examId);
         try {
           const response = await axios.get(`${url}/api/Examen/${examId}`);
           const examenData = response.data;
           setNameExam(examenData.NameExam);
           setDateExam(examenData.DateExam);
-          setHeureDebut(examenData.heureDebut);
-          setHeureFin(examenData.heureFin);
+          setHeureDebut(dayjs(examenData.heureDebut, 'HH:mm').format('HH:mm'));
+          console.log(heureDebut);
+          setHeureFin(dayjs(examenData.heureFin, 'HH:mm').format('HH:mm'));
+          console.log(heureFin);
           setTypeExam(examenData.typeExam);
-          setMatiereExam(examenData.matiereExam);
-          setSalleExam(examenData.salleExam);
-          setGroupe(examenData.groupe);
-          setTeachers(examenData.teachers);
+          setMatiereExam(examenData.matiereExam._id); // Set only _id
+          setSalleExam(examenData.salleExam._id); // Set only _id
+          setGroupe(examenData.groupe._id); // Set only _id
+          setTeachers(examenData.teachers.map((teacher) => teacher._id)); // Ensure it's an array of IDs
+          console.log(teachers);
           setPeriod(examenData.period);
           setRecite(examenData.recite);
           console.log(examenData)
@@ -66,6 +70,8 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
 
     useEffect(() => {
       const fetchGroupsByCategory = async () => {
+        console.log(matiereExam)
+
         try {
           if (matiereExam) {
             const response = await axios.get(`api/Groups/${matiereExam}`);
@@ -98,17 +104,27 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
    
   
     const handleSubmit = async() => {
+      console.log(matiereExam)
+
       console.log('Submit button clicked');
+      console.log(heureDebut);
+      console.log(heureFin);
+      const formattedHeureDebut = dayjs(heureDebut, 'HH:mm').format('HH:mm');
+      const formattedHeureFin = dayjs(heureFin, 'HH:mm').format('HH:mm');
+      console.log(formattedHeureFin);
+      console.log(formattedHeureDebut);
+      const selectedMatiere = categoriesList.find(categorie => categorie._id === matiereExam);
+      console.log(selectedMatiere);
       const updatedExamData = {
         NameExam,
         DateExam,
-        heureDebut,
-        heureFin,
+        heureDebut: formattedHeureDebut,
+        heureFin: formattedHeureFin,      
         typeExam,
         matiereExam,
         salleExam,
         groupe,
-        teachers: teachers.split(',').map(name => ({ name_arabe: name.trim() })),
+        teachers
       };
       console.log('Updated Exam Data:', updatedExamData);
       try {
@@ -117,21 +133,20 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
         // Append form data fields to FormData object
         formData.append('NameExam', NameExam);
         formData.append('DateExam', DateExam);
-        formData.append('heureDebut', heureDebut);
-        formData.append('heureFin', heureFin);
+        formData.append('heureDebut', heureDebut,formattedHeureDebut);
+        formData.append('heureFin', heureFin,formattedHeureFin);
         formData.append('typeExam', typeExam);
         formData.append('matiereExam', matiereExam);
         formData.append('salleExam', salleExam); 
         formData.append('groupe', groupe);
         formData.append('teachers', teachers);
+        console.log(teachers);
         formData.append('period', period);
         formData.append('recite', recite);
 
         console.log('Form Data:', formData); // Debugging console log
-  
         await dispatch(updateExamen(formData, examId, "Examen"));
         toast.success('Examen updated successfully!');
-        handleCloseModal();
 
     } catch (error) {
         console.error('update Secretary failed:', error);
@@ -261,10 +276,10 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
         </LocalizationProvider>
                     </Box>
                     <Box>
-                    <input type='time' value={heureDebut.format('HH:mm')} onChange={(e) => setHeureDebut(dayjs(e.target.value, 'HH:mm'))} label="بداية الوقت "/>   
+                    <input type='time' value={heureDebut}    onChange={(e) => setHeureDebut(dayjs(e.target.value, 'HH:mm').format('HH:mm'))} label="بداية الوقت "/>   
 
                     
-                    <input type='time' value={heureFin.format('HH:mm')}  onChange={(e) => setHeureFin(dayjs(e.target.value, 'HH:mm'))}  label="نهاية الوقت "/>   
+                    <input type='time' value={heureFin}     onChange={(e) => setHeureFin(dayjs(e.target.value, 'HH:mm').format('HH:mm'))}  label="نهاية الوقت "/>   
 
                     </Box>
                     <Box>
@@ -360,7 +375,7 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
                       onChange={(event) => setTeachers(event.target.value)}
                       label='مدرس'
                       multiple
-                      value={teachers}
+                      value={teachers} // Make sure the value is an array
                     >
                       {Array.isArray(teachersList) &&
                         teachersList.map((teacher) => (

@@ -212,12 +212,18 @@ const UpdateExamen = async (req, res) => {
         // Apply the updates
         updates.forEach((update) => {
             examen[update] = req.body[update];
+            if (update !== 'recite') {
+                examen[update] = req.body[update];
+            };
         });
 
         if (updates.includes('matiereExam')) examen.matiereExam = categorie._id;
         if (updates.includes('salleExamId')) examen.salleExam = salle._id;
         if (updates.includes('groupe')) examen.groupe = groupDoc._id;
         if (updates.includes('teachers')) examen.teachers = teacherDocs.map(t => t._id);
+        if (updates.includes('recite')) {
+            examen.recite = reciteToAdd;
+        };
 
         await examen.save();
 
@@ -246,7 +252,9 @@ const UpdateExamen = async (req, res) => {
                     groupe: {
                         _id: groupDoc._id,
                         name_group: groupDoc.name_group
-                    }
+                    },
+                    period: examen.period,
+                    recite: reciteToAdd
                 }
             }
         });

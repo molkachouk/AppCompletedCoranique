@@ -869,7 +869,7 @@ const sortedExams = exams.slice().sort((a, b) => {
                                                 <MdDelete />
 
                                                 </Button>
-                                                <Button variant="contained" onClick={() => handleOpenModal(item._id)} >
+                                                <Button variant="contained" onClick={() => {  console.log('Item ID:', item._id);handleOpenModal(item._id);}} >
                                                 <MdEditDocument />
 
                                                 </Button>
