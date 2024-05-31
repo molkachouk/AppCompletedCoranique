@@ -11,6 +11,7 @@ const salleController=require('../Controllers/salleController');
 const locationController=require('../Controllers/locationController');
 const examenController=require('../Controllers/examenController');
 const categorieController=require('../Controllers/categorieController');
+const emploisController=require('../Controllers/emploisController');
 
 
 const multer  = require('multer')
@@ -72,6 +73,7 @@ router.post("/addEvent",uploadEvent.single("images") ,eventController.AddEvent);
 router.post("/SalleCreate",salleController.salleCreate);
 router.post("/LocationCreate", locationController.locationCreate);
 router.post("/ExamenCreate", examenController.AddExamen);
+router.post("/EmploisCreate",emploisController.AddSeance);
 
 
 
@@ -106,6 +108,11 @@ router.get('/Examen/byGroup/:groupName', examenController.getExamenByGroupName);
 router.get('/Categories', categorieController.categorieList);
 router.get('/Categorie/:id', categorieController.getCategorieDetail);
 router.get("/Groups", groupController.getGroupsByCategory);
+router.get("/Emplois",emploisController.getEmploisall );
+router.get("/Emploi/:id",emploisController.getEmploiDetail );
+router.get("/Emploi",emploisController.getEmploisDetailByNameAndDate );
+router.get("/Emploi/group/:groupId", emploisController.getEmploiByGroupId);
+
 
 
 
@@ -127,6 +134,7 @@ router.delete("/Secretarys/:id", secretaryController.deleteSecretarys);
  router.delete("/Location/:id", locationController.deleteLocation);
  router.delete("/Examen/:id", examenController.deleteExamen);
  router.delete("/Categorie/:id", categorieController.deleteCategorie);
+ router.delete("/Emploi/:id", emploisController.deleteSeance);
  
 
  router.put("/Teacher/:id",teacherController.updateTeacher);
@@ -139,6 +147,8 @@ router.delete("/Secretarys/:id", secretaryController.deleteSecretarys);
  router.put("/Location/:id", locationController.updateLocation);
  router.put("/Examen/:id", examenController.UpdateExamen);
  router.put("/Categorie/:id", categorieController.updateCategorie);
+ router.put("/Emplois/:id", emploisController.updateSeance);
+
 
 
 module.exports=router;

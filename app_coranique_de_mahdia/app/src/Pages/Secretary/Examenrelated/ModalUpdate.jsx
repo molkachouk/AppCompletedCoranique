@@ -247,33 +247,33 @@ export default function ModalUpdate({ openModal, handleCloseModal, examId  }) {
                           
                         }}
                     />
-                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                    <LocalizationProvider dateAdapter={AdapterDayjs} >
 
                    <DatePicker
-          id="date"
-          value={DateExam ? dayjs(DateExam) : null}
-          onChange={(newValue) => {
-            if (newValue) {
-              setDateExam(newValue.format('YYYY-MM-DD'));
-              setCleared(false);
-            } else {
-              setDateExam('');
-              setCleared(true);
-            }
-          }}
-          InputLabelProps={{ shrink: true }}
-          sx={{
-            width: 260,
-            borderRadius: '50px',
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '50px',
-            },
-          }}
-          slotProps={{
-            field: { clearable: true, onClear: () => setCleared(true) },
-          }}
-        />
-        </LocalizationProvider>
+                        id="date"
+                        value={DateExam ? dayjs(DateExam) : null}
+                        onChange={(newValue) => {
+                          if (newValue) {
+                            setDateExam(newValue.format('YYYY-MM-DD'));
+                            setCleared(false);
+                          } else {
+                            setDateExam('');
+                            setCleared(true);
+                          }
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{
+                          width: 260,
+                          borderRadius: '50px',
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '50px',
+                          },
+                        }}
+                        slotProps={{
+                          field: { clearable: true, onClear: () => setCleared(true) },
+                        }}
+                      />
+                      </LocalizationProvider>
                     </Box>
                     <Box>
                     <input type='time' value={heureDebut}    onChange={(e) => setHeureDebut(dayjs(e.target.value, 'HH:mm').format('HH:mm'))} label="بداية الوقت "/>   
